@@ -1,0 +1,1697 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<!-- flow-rebuild template (Growth Audit, v3: + walkthrough video, phone view/QR, localization, paywall today vs proposed). Replace every double-brace placeholder, everything between
+     the SCREENS markers, and the CONTENT json. Rules that brand-check.py enforces are marked RULE.
+     Reference builds: eddieatadapty.github.io/datacamp-flow-rebuild-v2 · bterzic123.github.io/planner5d-flow-rebuild-v2 -->
+<title>Bazaart Growth Audit</title>
+<meta name="description" content="Five ideas and two of Bazaart's Meta ads, built into a clickable version of Bazaart's own onboarding. Prepared by Adapty.">
+<link rel="preconnect" href="https://fonts.googleapis.com"><link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<!-- the APP's font (brand.json fonts, or the closest Google family) + a mono if the app shows code -->
+<link href="https://fonts.googleapis.com/css2?family=Figtree:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+/* BRAND:START — the only place the APP's colours are written as literals. RULE: every value here is
+   copied from brand.json / a sampled pixel of the app's own screens; never "improved". Used only inside the phone. */
+:root{
+  --b-primary:#e0005d;               /* Next button, selected-row border (sampled, quiz screen) */
+  --b-primary-ink:#ffffff;
+  --b-bg:#fdfdfd;                    /* quiz / sign-up background (sampled) */
+  --b-surface:#f5f3f5;               /* unselected option row (sampled) */
+  --b-ink:#131214;                   /* primary text (sampled) */
+  --b-ink2:#716e6f;                  /* secondary text (sampled) */
+  --b-line:#e5e3e6;                  /* row borders, toggles (sampled) */
+  --b-accent2:#fedfef;               /* selected-row tint (sampled) */
+  --b-grad:linear-gradient(135deg,#ff0560,#d203b4); /* icon + headline gradient (site palette) */
+  --b-edit:#e3e3e9;                  /* editor canvas (sampled, their tool tutorial) */
+  --b-tip:#00b8e6;                   /* tutorial tooltip (sampled) */
+  --b-dark:#50433a;                  /* paywall bottom, over the photo (sampled) */
+  --b-mid:#848381;                   /* paywall top (sampled) */
+  --b-card:#efedf0;                  /* white pill CTA on the paywall (sampled) */
+  --b-on:#57d66d;                    /* switch on (sampled, paywall) */
+  --b-fb:#1977f3;                    /* Continue with Facebook (sign-up) */
+  --b-radius:16px;
+  --b-pill:999px;
+  --b-font:'Figtree',-apple-system,system-ui,sans-serif;
+  --b-mono:'JetBrains Mono',ui-monospace,monospace;
+}
+/* BRAND:END */
+.phone-in:has(.scr.dk.is-active) .sbar,.phone-in:has(.scr.dk[style*="z-index: 2"]) .sbar{color:#fff} /* status bar over their dark screens */
+/* A second app family (e.g. a mono for code) is applied HERE, never in SCREENS css (brand-check allows only
+   var(--b-font) there). Prefix with .scr so it beats the screens' font shorthands, e.g.:
+   .scr .code,.scr .instr code{font-family:var(--b-mono)} */
+
+/* ================= the audit page — Adapty's, not the app's. Light, Apple-style. ================= */
+/* "Your ads × your flow": the two Meta ads and what each changes in the flow */
+.au-adsec{border-top:1px solid var(--st-hair)}
+.au-ads{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:20px;margin-top:clamp(40px,6vw,64px)}
+.au-adc{display:grid;grid-template-columns:128px 1fr;gap:22px;background:var(--st-card);border-radius:28px;padding:22px}
+.au-adc img{width:128px;height:228px;object-fit:cover;border-radius:16px;display:block}
+.au-adk{margin:0;font-size:13.5px;font-weight:600;color:var(--st-ink2)}
+.au-adc blockquote{margin:8px 0 0;font-size:19px;line-height:1.3;font-weight:600;letter-spacing:-.015em}
+.au-adh{margin:8px 0 0;font-size:13.5px;color:var(--st-ink3)}
+.au-adc dl{margin:14px 0 14px;padding-top:12px;border-top:1px solid var(--st-hair);font-size:14.5px}
+.au-adc dt{font-size:12px;font-weight:600;color:var(--st-ink3);margin-top:8px}
+.au-adc dd{margin:2px 0 0;color:var(--st-ink)}
+.au-adc .au-lnk{font-size:15px}
+.au-adn{margin:22px 0 0;font-size:14.5px;line-height:1.55;color:var(--st-ink2);max-width:86ch}
+@media (max-width:860px){.au-ads{grid-template-columns:1fr}}
+@media (max-width:480px){.au-adc{grid-template-columns:92px 1fr;gap:16px;padding:18px}.au-adc img{width:92px;height:164px}}
+
+:root{
+  color-scheme:light;
+  --st-ground:#f5f5f7; --st-card:#ffffff; --st-ink:#1d1d1f; --st-ink2:#6e6e73; --st-ink3:#86868b;
+  --st-hair:rgba(0,0,0,.09); --st-link:#0066cc;
+  --st-accent:#1d0a14; /* darkest of the app: the editor ink, warmed toward their pink */      /* dark brand colour of the APP: buttons, the outcome band */
+  --st-hi:#ff0560; /* their brightest: logo gradient start */          /* bright brand colour of the APP: outcome numbers on the band, idea dots */
+  --st-mark:rgba(255,5,96,.28); /* --st-hi at ~.5 alpha: the highlighter under impact numbers */
+  --st-font:-apple-system,BlinkMacSystemFont,"SF Pro Display","SF Pro Text",system-ui,sans-serif;
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth;scroll-padding-top:64px}
+@media (prefers-reduced-motion:reduce){html{scroll-behavior:auto}*{transition:none!important;animation:none!important}}
+html,body{margin:0}
+body{background:var(--st-ground);color:var(--st-ink);font-family:var(--st-font);-webkit-font-smoothing:antialiased;font-size:17px;line-height:1.47}
+.au-wrap{max-width:1080px;margin:0 auto;padding-inline:22px}
+a{color:var(--st-link)}
+button{font-family:inherit}
+:focus-visible{outline:2px solid var(--st-link);outline-offset:3px;border-radius:6px}
+mark{background:linear-gradient(transparent 62%,var(--st-mark) 62%,var(--st-mark) 92%,transparent 92%);color:inherit;padding:0 .04em}
+
+/* nav */
+.au-nav{position:sticky;top:env(safe-area-inset-top,0px);z-index:40;background:rgba(245,245,247,.8);backdrop-filter:saturate(180%) blur(20px);-webkit-backdrop-filter:saturate(180%) blur(20px);border-bottom:1px solid var(--st-hair)}
+.au-nav-in{max-width:1080px;margin:0 auto;padding-inline:22px;height:52px;display:flex;align-items:center;gap:26px}
+.au-brand{display:flex;align-items:center;gap:10px;margin-right:auto;min-width:0}
+.au-brand img{width:26px;height:26px;border-radius:7px;flex:none}
+.au-brand span{font-size:15px;font-weight:600;letter-spacing:-.01em;white-space:nowrap}
+.au-brand small{font-size:15px;font-weight:400;color:var(--st-ink2)}
+.au-nav a{font-size:13px;color:var(--st-ink);text-decoration:none;opacity:.82}
+.au-nav a:hover{opacity:1}
+@media (max-width:560px){.au-nav a.au-opt{display:none}.au-brand small{display:none}}
+
+/* hero */
+.au-top-hero{text-align:center;padding-top:clamp(56px,9vw,96px);overflow:hidden;position:relative}
+.au-eyebrow{display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600;color:var(--st-ink);margin:0 0 14px}
+.au-eyebrow i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-display{font-size:clamp(60px,12vw,120px);line-height:.98;font-weight:700;letter-spacing:-.05em;margin:0}
+.au-lede{font-size:clamp(23px,3.4vw,34px);line-height:1.16;font-weight:600;letter-spacing:-.022em;max-width:760px;margin:22px auto 0;text-wrap:balance}
+.au-lede span{color:var(--st-ink2)}
+.au-byline{font-size:14px;color:var(--st-ink3);margin:18px 0 0}
+.au-ctas{display:flex;gap:26px;justify-content:center;align-items:center;margin-top:30px;flex-wrap:wrap}
+.au-btn{display:inline-block;background:var(--st-accent);color:#fff;border-radius:980px;padding:12px 23px;font-size:17px;font-weight:500;text-decoration:none;border:0;cursor:pointer}
+.au-btn:hover{filter:brightness(1.25)}
+.au-lnk{background:none;border:0;padding:0;color:var(--st-link);font-size:17px;text-decoration:none;cursor:pointer}
+.au-lnk::after{content:"\00a0›"}
+.au-lnk:hover{text-decoration:underline}
+.au-phones{display:flex;justify-content:center;align-items:flex-start;margin-top:clamp(40px,6vw,64px);height:clamp(300px,52vw,560px)}
+.au-hp{flex:none;border:0;padding:0;background:none;cursor:pointer;width:27%;max-width:290px;margin:0 -2.5%;transition:transform .5s cubic-bezier(.2,.7,.2,1)}
+.au-hp img{display:block;width:100%;height:auto;filter:drop-shadow(0 28px 50px rgba(0,0,0,.2))}
+.au-hp.au-c{width:31%;max-width:330px;z-index:2}
+.au-hp.au-l{transform:translateY(12%) rotate(-5deg)}
+.au-hp.au-r{transform:translateY(12%) rotate(5deg)}
+.au-hp.au-l:hover{transform:translateY(9%) rotate(-5deg)}.au-hp.au-r:hover{transform:translateY(9%) rotate(5deg)}.au-hp.au-c:hover{transform:translateY(-3%)}
+
+/* sections */
+.au-sec{padding-block:clamp(72px,10vw,120px)}
+.au-sec.au-white{background:var(--st-card)}
+.au-kicker{font-size:15px;font-weight:600;color:var(--st-ink2);margin:0 0 12px}
+.au-h2{font-size:clamp(34px,5.2vw,56px);line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:0;text-wrap:balance}
+.au-h2 span{color:var(--st-ink3)}
+.au-split{display:grid;grid-template-columns:1.05fr .95fr;gap:clamp(28px,6vw,80px);align-items:end}
+.au-split p{margin:0;font-size:clamp(17px,1.7vw,21px);line-height:1.45;color:var(--st-ink2);letter-spacing:-.01em}
+.au-split p b{color:var(--st-ink);font-weight:600}
+.au-split p + p{margin-top:16px}
+.au-stats{display:grid;grid-template-columns:repeat(3,1fr);margin-top:clamp(48px,7vw,80px);border-top:1px solid var(--st-hair)}
+.au-stat{padding:28px 20px 0 0}
+.au-stat b{display:block;font-size:clamp(40px,5.5vw,64px);font-weight:700;letter-spacing:-.04em;line-height:1;font-variant-numeric:tabular-nums}
+.au-stat span{display:block;font-size:15px;color:var(--st-ink2);margin-top:10px;max-width:22ch}
+.au-notes{display:grid;grid-template-columns:repeat(3,1fr);gap:clamp(20px,3vw,40px);margin-top:clamp(48px,7vw,72px)}
+.au-note h3{font-size:19px;font-weight:600;letter-spacing:-.015em;margin:0 0 8px}
+.au-note p{margin:0;font-size:15.5px;line-height:1.5;color:var(--st-ink2)}
+.au-note .au-ic{width:36px;height:36px;border-radius:10px;background:var(--st-ground);display:grid;place-items:center;margin-bottom:16px}
+.au-note .au-ic svg{width:19px;height:19px;stroke:var(--st-accent);fill:none;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+/* ideas */
+.au-ideas-h{margin-bottom:clamp(32px,5vw,48px)}
+.au-list{background:var(--st-card);border-radius:28px;padding-inline:clamp(20px,4vw,44px)}
+.au-idea{display:grid;grid-template-columns:56px 1fr 220px;gap:20px;align-items:start;padding-block:clamp(26px,3.5vw,36px);border-top:1px solid var(--st-hair)}
+.au-idea:first-child{border-top:0}
+.au-idea .au-num{font-size:15px;font-weight:600;color:var(--st-ink3);font-variant-numeric:tabular-nums;padding-top:6px}
+.au-idea h3{font-size:clamp(21px,2.4vw,26px);line-height:1.2;font-weight:600;letter-spacing:-.022em;margin:0 0 8px}
+.au-idea p{margin:0 0 12px;font-size:17px;line-height:1.5;color:var(--st-ink2);max-width:58ch}
+.au-idea p code{font:600 15px ui-monospace,SFMono-Regular,Menlo,monospace;color:var(--st-ink);background:var(--st-ground);padding:2px 7px;border-radius:6px}
+.au-idea .au-lnk{font-size:15px}
+.au-imp{text-align:right}
+.au-imp .au-v{font-size:clamp(30px,3.6vw,40px);font-weight:700;letter-spacing:-.035em;line-height:1;font-variant-numeric:tabular-nums;color:var(--st-accent)}
+.au-imp .au-l{font-size:13.5px;color:var(--st-ink2);margin-top:8px}
+.au-band{margin-top:20px;background:var(--st-accent);color:#fff;border-radius:28px;padding:clamp(32px,5vw,56px);display:grid;grid-template-columns:1fr auto;gap:clamp(28px,5vw,64px);align-items:center}
+.au-band .au-k{font-size:15px;font-weight:600;color:rgba(255,255,255,.62);margin:0 0 10px}
+.au-band h3{font-size:clamp(24px,3vw,32px);line-height:1.18;font-weight:600;letter-spacing:-.022em;margin:0;text-wrap:balance}
+.au-band .au-fn{font-size:13px;line-height:1.5;color:rgba(255,255,255,.55);margin:16px 0 0;max-width:52ch}
+.au-nums{display:flex;gap:clamp(28px,4vw,48px)}
+.au-nums small{display:block;font-size:13px;color:rgba(255,255,255,.62)}
+.au-nums b{display:block;font-size:clamp(48px,6.5vw,76px);font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-hi);font-variant-numeric:tabular-nums;margin:4px 0 8px}
+.au-nums span{font-size:14px;color:rgba(255,255,255,.8)}
+.au-band .au-btn{background:var(--st-hi);color:var(--st-accent);font-weight:600;margin-top:26px}
+
+/* prototype */
+.au-proto-h{text-align:center;max-width:720px;margin:0 auto}
+.au-proto-h p{font-size:clamp(17px,1.7vw,21px);color:var(--st-ink2);margin:14px 0 0}
+.au-seg{display:flex;gap:4px;justify-content:center;margin:clamp(28px,4vw,40px) auto 0;padding:4px;background:var(--st-ground);border-radius:980px;width:max-content;max-width:100%;overflow-x:auto;scrollbar-width:none}
+.au-seg::-webkit-scrollbar{display:none}
+.au-chip{flex:none;display:inline-flex;align-items:center;gap:6px;background:none;border:0;color:var(--st-ink2);font-size:13.5px;font-weight:500;padding:8px 14px;border-radius:980px;cursor:pointer;white-space:nowrap}
+.au-chip:hover{color:var(--st-ink)}
+.au-chip.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+.au-chip i{font-style:normal;font-size:11px;font-weight:700;width:18px;height:18px;border-radius:50%;display:grid;place-items:center;background:var(--st-hi);color:var(--st-accent)}
+.au-stage{display:grid;grid-template-columns:auto minmax(0,420px);gap:clamp(32px,6vw,72px);justify-content:center;align-items:center;margin-top:clamp(28px,4vw,44px)}
+.phone{width:390px;height:844px;border-radius:56px;padding:10px;background:#0b0d10;box-shadow:0 0 0 1.5px #3a3d42,0 40px 90px rgba(0,0,0,.25);max-width:calc(100vw - 44px)}
+.phone-in{position:relative;width:100%;height:100%;border-radius:46px;overflow:hidden;background:var(--b-bg)}
+.island{position:absolute;top:11px;left:50%;transform:translateX(-50%);width:120px;height:34px;border-radius:20px;background:#000;z-index:9}
+.sbar{position:absolute;top:0;left:0;right:0;height:52px;display:flex;justify-content:space-between;align-items:center;padding:4px 32px 0;font:600 15px -apple-system,system-ui,sans-serif;color:var(--b-ink);z-index:8;pointer-events:none}
+.au-pn{background:var(--st-ground);border-radius:28px;padding:clamp(26px,3.5vw,38px)}
+.au-pn-k{display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600;color:var(--st-ink)}
+.au-pn-k i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-pn-k.au-ctx{color:var(--st-ink2)}.au-pn-k.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-pn-t{font-size:clamp(24px,2.6vw,30px);line-height:1.12;font-weight:700;letter-spacing:-.028em;margin:10px 0 14px;text-wrap:balance}
+.au-pn-h{margin:0;font-size:17px;line-height:1.55;color:var(--st-ink2)}
+.au-pn-h b{color:var(--st-ink);font-weight:600}
+.au-pn-o{margin-top:24px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-pn-o .au-lab{font-size:13px;font-weight:600;color:var(--st-ink3)}
+.au-pn-o .au-val{font-size:clamp(38px,4.4vw,50px);font-weight:700;letter-spacing:-.04em;line-height:1.05;color:var(--st-accent);margin-top:6px;font-variant-numeric:tabular-nums}
+.au-pn-o .au-sub{font-size:14px;color:var(--st-ink2);margin-top:4px}
+.au-pn-a{margin:18px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-pn-nav{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-top:28px;padding-top:18px;border-top:1px solid var(--st-hair);font-size:13px;color:var(--st-ink3)}
+.au-pn-nav button{background:var(--st-card);border:0;border-radius:980px;padding:8px 15px;font-size:14px;font-weight:500;color:var(--st-ink);cursor:pointer;box-shadow:0 1px 2px rgba(0,0,0,.08)}
+.au-pn-nav button:disabled{opacity:.35;cursor:default}
+.au-hint{text-align:center;font-size:14px;color:var(--st-ink3);margin:22px 0 0}
+
+/* footer */
+.au-foot{padding-block:56px 72px;border-top:1px solid var(--st-hair)}
+.au-foot details{border-bottom:1px solid var(--st-hair);padding-bottom:18px}
+.au-foot summary{cursor:pointer;font-size:17px;font-weight:600;list-style:none;display:flex;justify-content:space-between;align-items:center}
+.au-foot summary::-webkit-details-marker{display:none}
+.au-foot summary::after{content:"+";font-size:24px;font-weight:300;color:var(--st-ink2)}
+.au-foot details[open] summary::after{content:"−"}
+.au-srcs{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px 48px;margin-top:18px}
+.au-srcs h4{font-size:12px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;color:var(--st-ink3);margin:18px 0 6px}
+.au-srcs dl{margin:0}.au-srcs dt{font-size:14.5px;font-weight:600;margin-top:10px}
+.au-srcs dd{margin:3px 0 0;font-size:14px;line-height:1.5;color:var(--st-ink2)}
+.au-fine{font-size:12.5px;line-height:1.6;color:var(--st-ink3);margin:22px 0 0;max-width:80ch}
+.au-cta-line{display:flex;justify-content:space-between;align-items:center;gap:20px;flex-wrap:wrap;margin-top:36px}
+.au-cta-line p{margin:0;font-size:clamp(19px,2.2vw,24px);font-weight:600;letter-spacing:-.02em;max-width:34ch}
+
+@media (max-width:900px){
+  .au-split,.au-band{grid-template-columns:1fr}
+  .au-notes{grid-template-columns:1fr}
+  .au-idea{grid-template-columns:40px 1fr}
+  .au-imp{grid-column:2;text-align:left;display:flex;align-items:baseline;gap:10px}
+  .au-imp .au-l{margin:0}
+  .au-imp .au-v{white-space:nowrap}
+  .au-stage{grid-template-columns:1fr;justify-items:center}
+  .au-pn{width:100%;max-width:520px}
+  .au-srcs{grid-template-columns:1fr}
+}
+@media (max-width:560px){.au-stats{grid-template-columns:1fr}.au-stat{padding:22px 0 0}.au-nums{flex-direction:column;gap:18px}}
+
+/* ================= extras (audit side): video, language, phone view + QR, paywall today vs proposed, ?tour ================= */
+[hidden]{display:none!important}
+/* the device never scrolls: off-screen slides would otherwise make it scrollable by focus / scrollIntoView */
+.phone-in,.scr{overflow:clip}
+/* hero: walkthrough link */
+.au-play::before{content:"▶";font-size:.72em;margin-right:7px;position:relative;top:-1px}
+/* video dialog */
+.au-vid{border:0;padding:0;background:transparent;max-width:min(1120px,94vw);width:100%;overflow:visible}
+.au-vid::backdrop{background:rgba(0,0,0,.74);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px)}
+.au-vid-in{background:#000;border-radius:18px;overflow:hidden;box-shadow:0 30px 80px rgba(0,0,0,.4)}
+.au-vid video{display:block;width:100%;aspect-ratio:16/9;background:#000}
+.au-vid-bar{display:flex;justify-content:space-between;align-items:center;gap:16px;padding:14px 4px 0;font-size:14px}
+.au-vid-bar a{color:#fff;opacity:.85}
+.au-vid-x{background:rgba(255,255,255,.16);border:0;color:#fff;border-radius:980px;padding:8px 16px;font-size:14px;cursor:pointer}
+/* language switch */
+.au-langrow{display:flex;justify-content:center;align-items:center;gap:12px;margin:18px 0 0;font-size:13.5px;color:var(--st-ink2);flex-wrap:wrap}
+.au-lsw{display:inline-flex;gap:2px;padding:3px;background:var(--st-ground);border-radius:980px}
+.au-lsw button{border:0;background:none;padding:6px 13px;border-radius:980px;font-size:13.5px;font-weight:500;color:var(--st-ink2);cursor:pointer;white-space:nowrap}
+.au-lsw button.on{background:var(--st-card);color:var(--st-ink);box-shadow:0 1px 3px rgba(0,0,0,.12)}
+/* QR card (desktop) / full-screen button (phone) */
+.au-qr{display:flex;align-items:center;gap:18px;margin:26px auto 0;max-width:500px;background:var(--st-ground);border-radius:22px;padding:14px 22px 14px 14px}
+.au-qr img{width:112px;height:112px;border-radius:12px;image-rendering:pixelated;flex:none;background:#fff}
+.au-qr b{display:block;font-size:17px;font-weight:600;letter-spacing:-.01em}
+.au-qr p{margin:4px 0 0;font-size:14.5px;line-height:1.45;color:var(--st-ink2)}
+.au-mobw{display:none;text-align:center;margin-top:22px}
+@media (max-width:900px){.au-qr{display:none}.au-mobw{display:block}}
+/* paywall: today vs proposed */
+.au-cmp{display:grid;grid-template-columns:minmax(0,290px) minmax(0,1fr) minmax(0,290px);gap:clamp(24px,4vw,52px);align-items:center;margin-top:clamp(32px,5vw,52px)}
+.au-cmp figure{margin:0;text-align:center}
+.au-cmp figure img{display:block;width:100%;height:auto;filter:drop-shadow(0 24px 44px rgba(0,0,0,.18))}
+.au-cmp figcaption{margin-top:14px;font-size:15px;font-weight:600}
+.au-cmp figcaption span{color:var(--st-ink2);font-weight:400}
+.au-cmp-go{border:0;padding:0;background:none;cursor:pointer;display:block;width:100%;transition:transform .3s}
+.au-cmp-go:hover{transform:translateY(-4px)}
+.au-chg{list-style:none;margin:0;background:var(--st-card);border-radius:24px;padding:4px clamp(18px,2.4vw,28px)}
+.au-chg li{padding:15px 0;border-top:1px solid var(--st-hair)}
+.au-chg li:first-child{border-top:0}
+.au-chg h4{margin:0 0 7px;font-size:16px;font-weight:600;letter-spacing:-.01em;display:flex;justify-content:space-between;align-items:center;gap:12px}
+.au-chg h4 i{font-style:normal;font-size:12px;font-weight:600;color:var(--st-accent);background:var(--st-mark);border-radius:6px;padding:2px 8px;white-space:nowrap}
+.au-was,.au-now{display:grid;grid-template-columns:78px 1fr;gap:8px;font-size:14.5px;line-height:1.42}
+.au-was{color:var(--st-ink3)}
+.au-now{color:var(--st-ink);margin-top:3px}
+.au-was em,.au-now em{font-style:normal;font-size:11.5px;font-weight:600;letter-spacing:.06em;text-transform:uppercase;padding-top:2px}
+.au-now em{color:var(--st-link)}
+.au-kept{margin:22px 0 0;font-size:14px;color:var(--st-ink2);text-align:center}
+@media (max-width:900px){.au-cmp{grid-template-columns:1fr 1fr;gap:18px}.au-chg{grid-column:1 / -1;order:3}.au-was,.au-now{grid-template-columns:70px 1fr}}
+
+/* ?app — the prototype full screen on a real phone, with a bar that opens the idea panel */
+html.appmode,html.appmode body{height:100%;overflow:hidden;background:#000}
+html.appmode .au-nav,html.appmode .au-top-hero,html.appmode #why,html.appmode #ideas,html.appmode #compare,html.appmode .au-foot,
+html.appmode .au-proto-h,html.appmode #prototype .au-langrow,html.appmode #chips,html.appmode .au-hint,html.appmode .au-qr,html.appmode .au-mobw{display:none!important}
+html.appmode #prototype{padding:0;background:#000}
+html.appmode #prototype .au-wrap{padding:0;max-width:none}
+html.appmode .au-stage{display:block;margin:0}
+html.appmode .phone{position:fixed;top:0;left:0;right:0;margin:0 auto;width:min(100%,480px);height:calc(100% - 56px - env(safe-area-inset-bottom,0px));max-width:none;border-radius:0;padding:0;box-shadow:none;background:#000}
+html.appmode .phone-in{border-radius:0}
+html.appmode .island,html.appmode .sbar{display:none}
+html.appmode .scr .s-pad{padding-top:max(58px,calc(env(safe-area-inset-top,0px) + 16px))}
+html.appmode .scr .s-x,html.appmode .scr .s-lang{top:max(54px,calc(env(safe-area-inset-top,0px) + 10px))}
+.au-appbar,.au-scrim{display:none}
+html.appmode .au-appbar{display:flex;position:fixed;left:0;right:0;bottom:0;z-index:70;height:calc(56px + env(safe-area-inset-bottom,0px));padding:0 12px env(safe-area-inset-bottom,0px) 16px;align-items:center;gap:12px;background:#0b0b0c;border-top:1px solid rgba(255,255,255,.1);color:#fff}
+.au-ab-why{flex:1;min-width:0;display:flex;align-items:center;gap:9px;background:none;border:0;color:#fff;font-size:14px;font-weight:500;text-align:left;cursor:pointer;padding:0}
+.au-ab-why i{width:8px;height:8px;border-radius:50%;background:var(--st-hi);flex:none}
+.au-ab-why span{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.au-ab-why em{font-style:normal;color:rgba(255,255,255,.6);margin-left:auto;flex:none;font-size:13px}
+.au-appbar .au-lsw{background:rgba(255,255,255,.12)}
+.au-appbar .au-lsw button{color:rgba(255,255,255,.75);padding:5px 11px}
+.au-appbar .au-lsw button.on{background:#fff;color:#000}
+html.appmode #panel{position:fixed;left:0;right:0;bottom:0;z-index:80;max-width:none;width:auto;margin:0 auto;border-radius:24px 24px 0 0;max-height:78%;overflow:auto;transform:translateY(105%);transition:transform .3s cubic-bezier(.3,.7,.2,1);padding-bottom:calc(26px + env(safe-area-inset-bottom,0px))}
+html.appmode.au-open #panel{transform:none}
+html.appmode.au-open .au-scrim{display:block;position:fixed;inset:0;z-index:75;background:rgba(0,0,0,.5)}
+
+/* ?tour — 1280×720 walkthrough frames (record-video.sh renders them into assets/walkthrough.mp4) */
+.au-tour{display:none}
+html.tourmode,html.tourmode body{overflow:hidden;background:var(--st-ground)}
+html.tourmode body *{visibility:hidden}
+html.tourmode .phone,html.tourmode .phone *,html.tourmode .au-tour,html.tourmode .au-tour *{visibility:visible}
+html.tourmode .phone{position:fixed;left:170px;top:44px;margin:0;transform:scale(.755);transform-origin:0 0;box-shadow:0 0 0 1.5px #3a3d42,0 34px 80px rgba(0,0,0,.22);z-index:5;max-width:none}
+html.tourmode .au-tour{display:block;position:fixed;inset:0;z-index:6;pointer-events:none;color:var(--st-ink)}
+.au-tb{position:absolute;left:590px;top:30px;display:flex;align-items:center;gap:10px;font-size:16px;font-weight:600}
+.au-tb img{width:26px;height:26px;border-radius:7px}
+.au-tb small{font-size:16px;font-weight:400;color:var(--st-ink2)}
+.au-tby{position:absolute;right:48px;top:32px;font-size:14px;color:var(--st-ink3)}
+.au-tcap{position:absolute;left:590px;right:60px;top:50%;transform:translateY(-50%)}
+.au-tk{display:flex;align-items:center;gap:9px;font-size:17px;font-weight:600}
+.au-tk i{width:9px;height:9px;border-radius:50%;background:var(--st-hi);box-shadow:0 0 0 3px var(--st-mark)}
+.au-tk.au-ctx{color:var(--st-ink2)}.au-tk.au-ctx i{background:var(--st-ink3);box-shadow:none}
+.au-tt{font-size:46px;line-height:1.06;font-weight:700;letter-spacing:-.035em;margin:14px 0 14px;text-wrap:balance}
+.au-tl{font-size:23px;line-height:1.36;color:var(--st-ink2);letter-spacing:-.01em;margin:0;max-width:28ch}
+.au-to{margin-top:28px;padding-top:22px;border-top:1px solid var(--st-hair)}
+.au-to small{display:block;font-size:14px;font-weight:600;color:var(--st-ink3)}
+.au-to b{display:inline-block;font-size:62px;font-weight:700;letter-spacing:-.045em;line-height:1.08;color:var(--st-accent);margin-top:4px}
+.au-to span{display:block;font-size:16px;color:var(--st-ink2);margin-top:2px}
+.au-tprog{position:absolute;left:48px;right:48px;bottom:22px;height:4px;border-radius:3px;background:var(--st-hair);overflow:hidden}
+.au-tprog i{display:block;height:100%;background:var(--st-hi)}
+.au-ttap{position:absolute;left:0;top:0;width:46px;height:46px;margin:-23px 0 0 -23px;border-radius:50%;background:rgba(255,255,255,.5);box-shadow:0 0 0 2.5px rgba(255,255,255,.9),0 6px 16px rgba(0,0,0,.35);opacity:0}
+.au-tintro,.au-tend{position:absolute;inset:0;background:var(--st-ground);display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;opacity:0}
+.au-tintro .au-lede{margin-top:18px}
+.au-te-h{font-size:46px;line-height:1.08;font-weight:700;letter-spacing:-.035em;margin:0;max-width:18ch;text-wrap:balance}
+.au-te-n{display:flex;gap:64px;margin-top:30px}
+.au-te-n small{display:block;font-size:14px;color:var(--st-ink2)}
+.au-te-n b{display:block;font-size:76px;font-weight:700;letter-spacing:-.045em;line-height:1;color:var(--st-accent);margin:4px 0 6px}
+.au-te-n span{font-size:15px;color:var(--st-ink2)}
+.au-te-q{display:flex;align-items:center;gap:18px;margin-top:34px;background:var(--st-card);border-radius:20px;padding:12px 24px 12px 12px;text-align:left}
+.au-te-q img{width:104px;height:104px;border-radius:10px;image-rendering:pixelated}
+.au-te-q b{display:block;font-size:18px;font-weight:600}
+.au-te-q span{display:block;font-size:15px;color:var(--st-link);margin-top:3px}
+.au-te-f{position:absolute;bottom:44px;left:0;right:0;font-size:13px;color:var(--st-ink3);margin:0}
+
+/* ---------- screen engine (layout only, no colours) ---------- */
+.scr{position:absolute;inset:0;display:flex;flex-direction:column;background:var(--b-bg);color:var(--b-ink);font-family:var(--b-font);
+     transform:translateX(100%);transition:transform .32s cubic-bezier(.3,.7,.2,1);overflow:hidden;text-align:left;line-height:normal;font-size:16px}
+.scr.is-active{transform:none;z-index:2}.scr.is-past{transform:translateX(-28%)}.scr.under{transform:none;z-index:1}
+.scr.sheet{transform:translateY(100%)}.scr.sheet.is-active{transform:none}
+.nofx,.nofx *{transition:none!important}
+.shot .scr{transition:none!important}
+/* ?phone — just the device at (10,10), for shoot.sh and hero-stills.sh (&clear = transparent ground) */
+.phoneonly body{background:#141615}
+.phoneonly.clear body{background:transparent}
+.phoneonly body *{visibility:hidden}
+.phoneonly .phone,.phoneonly .phone *{visibility:visible}
+.phoneonly .phone{position:fixed;top:10px;left:10px;z-index:99;box-shadow:none;max-width:none;margin:0}
+
+/* SCREENS:START — styles for the app's screens. RULE: colours only via var(--b-*), or white/black
+   with alpha (scrims, shadows). RULE: no class name that the audit page above already uses
+   (.hero .btn .chip .list .idea .note .stat .band .num .hint .display .split …) — brand-check refuses collisions. */
+:where(.scr) button{font-family:var(--b-font);border:0;background:none;cursor:pointer;padding:0;color:inherit}
+/* the Meta ad (Reels placement): their creative, their copy verbatim */
+.ad{background:#000;color:#fff}
+.adimg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.adtop,.adbot{position:absolute;left:0;right:0}
+.adtop{top:0;height:150px;background:linear-gradient(rgba(0,0,0,.55),transparent)}
+.adbot{bottom:0;padding:110px 14px 28px;background:linear-gradient(transparent,rgba(0,0,0,.84) 40%)}
+.adsw{position:absolute;top:58px;left:50%;transform:translateX(-50%);z-index:3;display:flex;gap:2px;padding:3px;border-radius:var(--b-pill);background:rgba(0,0,0,.45);backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);white-space:nowrap}
+.adsw button{font:600 11.5px var(--b-font);color:rgba(255,255,255,.78);padding:5px 11px;border-radius:var(--b-pill)}
+.adsw button.on{background:rgba(255,255,255,.94);color:#000}
+.adpg{display:flex;align-items:center;gap:8px;font:600 13.5px var(--b-font);color:#fff}
+.adpg img{width:30px;height:30px;border-radius:8px;flex:none}
+.adpg small{display:block;font:400 11px var(--b-font);color:rgba(255,255,255,.75)}
+.adtx{font:400 13.5px/1.42 var(--b-font);color:#fff;margin:10px 0 0}
+.adcta{display:flex;justify-content:space-between;align-items:center;gap:10px;width:100%;margin-top:12px;padding:11px 14px;border-radius:9px;background:rgba(255,255,255,.95)!important;color:#000!important;font:600 14px var(--b-font)!important;text-align:left}
+.adcta small{display:block;font:400 11px/1.3 var(--b-font);color:rgba(0,0,0,.58);margin-bottom:2px}
+.adcta svg{width:14px;height:14px;flex:none}
+.adside{position:absolute;right:12px;bottom:300px;display:flex;flex-direction:column;gap:18px;color:#fff}
+.adside svg{width:26px;height:26px;display:block}
+
+/* welcome: their full-bleed value screen (white title, segmented progress, white pill) */
+.wel{background:#000;color:#fff}
+.welart{position:absolute;inset:0}
+.welbg{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.welin{position:absolute;left:22px;bottom:128px;width:118px;height:118px;object-fit:cover;border-radius:16px;border:4px solid #fff;box-shadow:0 10px 30px rgba(0,0,0,.25)}
+.welshade{position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.6),rgba(0,0,0,0) 38%,rgba(0,0,0,0) 70%,rgba(0,0,0,.35))}
+.segs{position:absolute;top:56px;left:16px;right:16px;display:flex;gap:6px;z-index:2}
+.segs i{flex:1;height:3px;border-radius:2px;background:rgba(255,255,255,.4)}.segs i.on{background:#fff}
+.welh{position:absolute;top:78px;left:24px;right:24px;margin:0;text-align:center;font:700 25px/1.2 var(--b-font);letter-spacing:-.01em;color:#fff;z-index:2}
+.wbtn{position:absolute;left:18px;right:18px;bottom:36px;z-index:2;background:var(--b-card)!important;color:var(--b-ink)!important;border-radius:var(--b-pill);padding:15px;font:600 16px var(--b-font)!important}
+
+/* quiz: their light screen, illustration on top, rows with a check circle, pink Next */
+.qtop{position:absolute;top:50px;right:18px;z-index:3}
+.qskip{font:500 14px var(--b-font)!important;color:var(--b-ink2)!important}
+.qprog{position:absolute;top:52px;left:18px;width:58%;height:3px;border-radius:3px;background:var(--b-line);z-index:3}
+.qprog i{display:block;height:100%;border-radius:3px;background:var(--b-primary)}
+.qart{width:100%;margin-top:70px;flex:none;height:auto}
+.qbody{flex:1;display:flex;flex-direction:column;padding:6px 20px 30px}
+.qh{font:700 22px/1.25 var(--b-font);margin:0;color:var(--b-ink)}
+.qsub{font:400 13.5px/1.4 var(--b-font);color:var(--b-ink2);margin:6px 0 14px}
+.qlist{display:flex;flex-direction:column;gap:10px}
+.qrow{display:flex;align-items:center;gap:12px;width:100%;padding:13px 14px;border-radius:var(--b-pill);background:var(--b-surface)!important;border:1.5px solid transparent!important;text-align:left;font:500 15px var(--b-font)!important;color:var(--b-ink)!important}
+.qrow.on{background:var(--b-accent2)!important;border-color:var(--b-primary)!important}
+.qi{font-size:18px;width:24px;text-align:center;flex:none}
+.qt{flex:1}
+.qc{width:20px;height:20px;border-radius:50%;border:1.5px solid var(--b-line);flex:none;position:relative}
+.qrow.on .qc{background:var(--b-primary);border-color:var(--b-primary)}
+.qrow.on .qc:after{content:"";position:absolute;left:6px;top:2.5px;width:5px;height:10px;border:solid #fff;border-width:0 2px 2px 0;transform:rotate(45deg)}
+.qnext{margin-top:auto;width:100%;border-radius:var(--b-pill);background:var(--b-primary)!important;color:var(--b-primary-ink)!important;padding:15px;font:600 16px var(--b-font)!important}
+
+/* editor: their canvas, top bar, AI chips and prompt bar (App Store shots 3 and 6) */
+.ed{background:var(--b-edit)}
+.edtop{position:absolute;top:54px;left:16px;right:16px;display:flex;align-items:center;gap:10px;z-index:3}
+.edc,.edpill,.edgo{height:42px;display:inline-flex;align-items:center;justify-content:center;border-radius:var(--b-pill);background:#fff!important;color:var(--b-ink)!important;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.edc{width:42px}.edc.dim{color:rgba(0,0,0,.3)!important}
+.edc svg,.edpill svg,.edgo svg{width:20px;height:20px}
+.edpill{margin-left:auto;padding:0 16px;gap:14px}.edpill b{font-size:15px;letter-spacing:1px}
+.edgo{width:42px;background:var(--b-primary)!important;color:#fff!important}
+.edcan{position:absolute;top:116px;left:0;right:0;bottom:170px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px;padding:0 26px}
+.edph{position:relative;width:100%;aspect-ratio:1;border-radius:6px;overflow:hidden;background:#fff;box-shadow:0 6px 22px rgba(0,0,0,.08)}
+.edph img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.edbusy{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;background:rgba(255,255,255,.55);backdrop-filter:blur(3px);-webkit-backdrop-filter:blur(3px);font:600 14px var(--b-font);color:var(--b-ink)}
+.edbusy i{width:34px;height:34px;border-radius:50%;border:3px solid var(--b-accent2);border-top-color:var(--b-primary);animation:bzspin .8s linear infinite}
+@keyframes bzspin{to{transform:rotate(360deg)}}
+.edcap{margin:0;font:500 13px var(--b-font);color:var(--b-ink2);text-align:center}
+.edtip{position:absolute;left:0;right:0;bottom:142px;display:flex;justify-content:center;z-index:3}
+.edtip span{position:relative;background:var(--b-tip);color:#fff;font:600 13px var(--b-font);padding:7px 12px;border-radius:9px}
+.edtip span:after{content:"";position:absolute;left:50%;bottom:-5px;margin-left:-6px;border:6px solid transparent;border-bottom:0;border-top-color:var(--b-tip)}
+.edchips{position:absolute;left:12px;right:0;bottom:84px;display:flex;gap:8px;align-items:center;overflow:hidden;white-space:nowrap}
+.edspark{width:44px;height:40px;flex:none;border-radius:var(--b-pill);background:#fff;color:var(--b-primary);display:grid;place-items:center;font-size:18px}
+.edchip{height:40px;display:inline-flex;align-items:center;padding:0 16px;border-radius:var(--b-pill);background:#fff!important;font:500 14px var(--b-font)!important;color:var(--b-ink)!important;flex:none}
+.edchip.hot{box-shadow:0 0 0 2px var(--b-tip),0 0 0 6px rgba(255,255,255,.75)}
+.edbar{position:absolute;left:14px;right:14px;bottom:30px;display:flex;align-items:center;gap:10px}
+.edplus{width:44px;height:44px;border-radius:50%;background:var(--b-primary);color:#fff;display:grid;place-items:center;font:400 26px var(--b-font);flex:none}
+.edin{flex:1;height:44px;border-radius:var(--b-pill);background:#fff;display:flex;align-items:center;padding:0 16px;font:500 15px var(--b-font);color:var(--b-ink2)}
+/* result */
+.rsph{position:absolute;top:110px;left:16px;right:16px;bottom:236px;border-radius:6px;overflow:hidden;background:#fff}
+.rsbig{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.rsin{position:absolute;left:12px;bottom:12px;width:86px;height:86px;object-fit:cover;border-radius:12px;border:3px solid #fff;box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.rssheet{position:absolute;left:0;right:0;bottom:0;height:226px;background:var(--b-bg);border-radius:22px 22px 0 0;padding:20px 20px 30px;display:flex;flex-direction:column;box-shadow:0 -8px 30px rgba(0,0,0,.08)}
+.rsh{margin:0;font:700 20px/1.25 var(--b-font);color:var(--b-ink)}
+.rss{margin:6px 0 0;font:400 13.5px/1.4 var(--b-font);color:var(--b-ink2)}
+
+/* paywall: their layout, photo behind, white type, translucent plan rows, switch, white pill */
+.pw{background:var(--b-dark);color:#fff}
+.pwbg,.tdbg{position:absolute;left:0;right:0;top:0;height:64%}
+.pwbg img,.tdbg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.tdbg{top:14%;height:58%}
+.tdy{background:linear-gradient(var(--b-mid),var(--b-mid) 15%,var(--b-dark) 72%)}
+.pwshade{position:absolute;inset:0;background:linear-gradient(rgba(0,0,0,.62),rgba(0,0,0,.18) 30%,rgba(0,0,0,0) 40%,var(--b-dark) 66%)}
+.tdy .pwshade{background:linear-gradient(rgba(0,0,0,0) 40%,var(--b-dark) 70%)}
+.pwx{position:absolute;top:54px;right:16px;width:30px;height:30px;border-radius:50%;background:rgba(0,0,0,.35)!important;color:#fff!important;font:600 14px var(--b-font)!important;z-index:4;display:grid;place-items:center}
+.pwtop{position:absolute;top:92px;left:20px;right:20px;text-align:center;z-index:3}
+.pwh{margin:0;font:700 27px/1.15 var(--b-font);letter-spacing:-.01em;color:#fff;text-shadow:0 1px 12px rgba(0,0,0,.25)}
+.tdh{font-size:34px}
+.pws{margin:8px 0 0;font:500 15px/1.35 var(--b-font);color:rgba(255,255,255,.92);text-shadow:0 1px 10px rgba(0,0,0,.3)}
+.pwbot{position:absolute;left:18px;right:18px;bottom:22px;display:flex;flex-direction:column;gap:8px;z-index:3}
+.pwproof{margin:0 0 2px;text-align:center;font:600 13px var(--b-font);color:#fff}
+.pwstars{letter-spacing:1px;color:#fff}
+.pwp,.tdrow{display:flex;align-items:center;gap:10px;width:100%;padding:12px 16px;border-radius:14px;background:transparent!important;color:#fff!important;font:500 16px var(--b-font)!important;text-align:left}
+.pwp.on,.tdrow.on{background:rgba(255,255,255,.2)!important}
+.pwr{width:19px;height:19px;border-radius:50%;border:2px solid #fff;flex:none;position:relative}
+.pwp.on .pwr:after,.tdrow.on .pwr:after{content:"";position:absolute;inset:3px;border-radius:50%;background:#fff}
+.pwn{flex:1;display:flex;align-items:center;gap:8px}
+.pwbadge{font:700 10.5px var(--b-font);font-style:normal;color:#fff;background:var(--b-grad);padding:3px 7px;border-radius:6px;letter-spacing:.02em}
+.pwv{text-align:right;font:600 15px var(--b-font);white-space:nowrap}
+.pwv b{display:block;font:700 16px var(--b-font)}.pwv small{display:block;font:500 12px var(--b-font);color:rgba(255,255,255,.8)}
+.pwtg{display:flex;align-items:center;justify-content:space-between;width:100%;padding:11px 14px 11px 16px;border-radius:var(--b-pill);border:1px solid rgba(255,255,255,.4)!important;color:#fff!important;font:500 15.5px var(--b-font)!important;text-align:left}
+.pwsw{width:46px;height:28px;border-radius:14px;background:var(--b-on);position:relative;flex:none}
+.pwsw:after{content:"";position:absolute;top:2px;right:2px;width:24px;height:24px;border-radius:50%;background:#fff}
+.pwsw.off{background:rgba(255,255,255,.25)}.pwsw.off:after{right:auto;left:2px}
+.pwcta{display:block;width:100%;text-align:center;padding:15px;border-radius:var(--b-pill);background:var(--b-card)!important;color:var(--b-ink)!important;font:600 17px var(--b-font)!important}
+.pwfine{margin:0;text-align:center;font:500 13.5px var(--b-font);color:#fff}
+.pwmil{margin:0;text-align:center;font:400 11.5px/1.35 var(--b-font);color:rgba(255,255,255,.72)}
+.pwlegal{display:flex;justify-content:center;gap:18px;font:500 11.5px var(--b-font);color:rgba(255,255,255,.5)}
+.tdf{font-size:15px;margin-bottom:6px}
+
+/* offer on close: a sheet in their light style */
+.of{background:transparent}
+.ofsh{position:absolute;left:0;right:0;bottom:0;top:250px;background:var(--b-bg);border-radius:24px 24px 0 0;padding:26px 22px 30px;display:flex;flex-direction:column;box-shadow:0 -12px 40px rgba(0,0,0,.25)}
+.ofx{position:absolute;top:16px;right:16px;width:30px;height:30px;border-radius:50%;background:var(--b-surface)!important;color:var(--b-ink2)!important;font:600 13px var(--b-font)!important}
+.ofic img{width:52px;height:52px;border-radius:13px;display:block}
+.ofh{margin:16px 0 0;font:700 24px/1.2 var(--b-font);color:var(--b-ink)}
+.ofs{margin:8px 0 0;font:400 15px/1.45 var(--b-font);color:var(--b-ink2)}
+.ofl{list-style:none;margin:16px 0 0;padding:0;display:flex;flex-direction:column;gap:9px}
+.ofl li{position:relative;padding-left:28px;font:500 14.5px/1.35 var(--b-font);color:var(--b-ink)}
+.ofl li:before{content:"";position:absolute;left:0;top:1px;width:18px;height:18px;border-radius:50%;background:var(--b-accent2)}
+.ofl li:after{content:"";position:absolute;left:6.5px;top:4px;width:4px;height:8px;border:solid var(--b-primary);border-width:0 2px 2px 0;transform:rotate(45deg)}
+.ofno{margin-top:12px;font:500 14px var(--b-font)!important;color:var(--b-ink2)!important}
+
+/* sign-up: kept as it is, now after the paywall */
+.su{background:var(--b-bg)}
+.suart{position:absolute;top:0;left:0;right:0;width:100%;height:50%;object-fit:cover;object-position:50% 20%}
+.su:before{content:"";position:absolute;left:0;right:0;top:32%;height:20%;background:linear-gradient(rgba(253,253,253,0),var(--b-bg));z-index:1}
+.sunot{position:absolute;top:52px;right:16px;z-index:3;background:var(--b-card)!important;color:var(--b-ink)!important;padding:7px 13px;border-radius:var(--b-pill);font:500 14px var(--b-font)!important}
+.subody{position:absolute;left:22px;right:22px;bottom:26px;z-index:2;display:flex;flex-direction:column}
+.sulogo{width:58px;height:58px;border-radius:14px}
+.suh{margin:14px 0 0;font:700 26px/1.2 var(--b-font);color:var(--b-ink)}
+.sus{margin:6px 0 22px;font:400 15px/1.4 var(--b-font);color:var(--b-ink)}
+.subtn{width:100%;padding:14px;border-radius:var(--b-pill);font:600 16px var(--b-font)!important;margin-bottom:10px}
+.subtn.ap{background:#000!important;color:#fff!important}
+.subtn.fb{background:var(--b-fb)!important;color:#fff!important}
+.subtn.gg{background:var(--b-card)!important;color:var(--b-ink)!important}
+.sulegal{margin:6px 0 0;text-align:center;font:400 11.5px var(--b-font);color:var(--b-ink2)}
+/* SCREENS:END */
+</style>
+</head>
+<body>
+
+<nav class="au-nav" aria-label="Sections">
+  <div class="au-nav-in">
+    <div class="au-brand">
+      <img src="assets/brand/appstore-icon.jpg" alt="">
+      <span>Growth Audit <small>· Bazaart</small></span>
+    </div>
+    <a class="au-opt" href="#why">Why this</a>
+    <a href="#ideas">Five ideas</a>
+    <a class="au-opt" href="#ads">Your ads</a>
+    <a href="#prototype">Prototype</a>
+    <a class="au-opt" href="#compare" id="navCompare" hidden>Paywall</a>
+  </div>
+</nav>
+
+<header class="au-top-hero" id="top">
+  <div class="au-wrap">
+    <p class="au-eyebrow"><i></i>Growth Audit · November 2026</p>
+    <h1 class="au-display">Bazaart</h1>
+    <p class="au-lede">Five ideas to turn more online sellers into subscribers, and a first screen that keeps your Meta ad’s promise. <span>All built into your own onboarding, so you can tap through it from the ad.</span></p>
+    <p class="au-byline">Prepared by Adapty for the Bazaart team</p>
+    <div class="au-ctas">
+      <a class="au-btn" href="#ideas">See the five ideas</a>
+      <a class="au-lnk" href="#prototype">Open the prototype</a>
+      <button type="button" class="au-lnk au-play" id="heroVideo" hidden>Watch the 30-second walkthrough</button>
+    </div>
+  </div>
+  <!-- filled from CONTENT.hero: three screen ids → assets/hero/<id>.png (make them with hero-stills.sh) -->
+  <div class="au-phones" id="heroPhones" aria-label="Three screens from the prototype"></div>
+</header>
+
+<section class="au-sec au-white" id="why">
+  <div class="au-wrap">
+    <div class="au-split">
+      <div>
+        <p class="au-kicker">Why you’re seeing this</p>
+        <h2 class="au-h2">30,000 subscription apps taught us what moves conversion. <span>Here’s what we’d test first at Bazaart.</span></h2>
+      </div>
+      <div>
+        <p>Adapty runs subscriptions for <b>more than 30,000 apps</b>, so we see which onboarding and paywall changes lift revenue across the whole market, not just inside one app.</p>
+        <p>We pointed that at Bazaart. We took <b>your own screens, copy and prices</b> from your recorded iOS flow and App Store listing, <b>and two of your Meta ads</b>, and rebuilt the path from the ad to the paywall around the five ideas with the most potential.</p>
+      </div>
+    </div>
+    <div class="au-stats">
+      <div class="au-stat"><b>30,000+</b><span>apps run their subscriptions on Adapty</span></div>
+      <div class="au-stat"><b>5</b><span>ideas, each built as a working screen</span></div>
+      <div class="au-stat"><b>0</b><span>changes to your art direction</span></div>
+    </div>
+    <div class="au-notes">
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M12 3l2.6 5.3 5.9.9-4.3 4.1 1 5.8L12 16.4 6.8 19.1l1-5.8L3.5 9.2l5.9-.9z"/></svg></div>
+        <h3>Five ideas, not fifteen</h3>
+        <p>We’re not proposing to rebuild every screen. These are the changes with the highest potential, ranked by what we’d test first.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 3.5v17M3.5 12h17"/></svg></div>
+        <h3>Your design, not ours</h3>
+        <p>Every colour, control and price in the prototype is Bazaart’s. We changed the order and what gets shown.</p>
+      </div>
+      <div class="au-note">
+        <div class="au-ic"><svg viewBox="0 0 24 24"><path d="M9 11l3 3 8-8"/><path d="M20 12v6.5a1.5 1.5 0 0 1-1.5 1.5h-13A1.5 1.5 0 0 1 4 18.5v-13A1.5 1.5 0 0 1 5.5 4H15"/></svg></div>
+        <h3>We hope you haven’t tried these yet</h3>
+        <p>We work from the outside, so we can’t see your flow after our July 2025 recording, or your test history. If you’ve already run one of these, tell us and we’ll go deeper on the rest.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec" id="ideas">
+  <div class="au-wrap">
+    <div class="au-ideas-h">
+      <p class="au-kicker">The shortlist</p>
+      <h2 class="au-h2">Five ideas. <span>Ranked by what we’d test first.</span></h2>
+    </div>
+    <div class="au-list" id="ideaList"></div>
+    <div class="au-band">
+      <div>
+        <p class="au-k">Potential outcome, based on Adapty data</p>
+        <h3>Together they work on four moments: what the ad promised, what they make before the price, how the price reads, and what happens when someone says no.</h3>
+        <p class="au-fn" id="bandFn"></p>
+        <a class="au-btn" href="#prototype">Tap through the prototype</a>
+      </div>
+      <div class="au-nums" id="bandNums"></div>
+    </div>
+  </div>
+</section>
+
+<section class="au-sec au-adsec" id="ads">
+  <div class="au-wrap">
+    <div class="au-split">
+      <div>
+        <p class="au-kicker">Your ads × your flow</p>
+        <h2 class="au-h2">Keep the promise the ad made. <span>Two of your Meta ads, two first screens.</span></h2>
+      </div>
+      <div>
+        <p>Meta carries almost all of the Bazaart ads we can see: about 90 live in the US Ad Library, nearly all speaking to online sellers. Yet every install meets the same welcome, <b>“Get your design superpowers”</b>, and the question <b>“What would you use Bazaart for? Business · Personal”</b>, whichever ad brought it.</p>
+        <p>Flow Builder can open a different flow by where the install came from, so the first screen repeats what the ad said, and each ad is judged on the subscriptions it brings, not the installs.</p>
+      </div>
+    </div>
+    <div class="au-ads">
+      <article class="au-adc">
+        <img src="assets/ads/ad-a.jpg" alt="A frame from the ad">
+        <div>
+          <p class="au-adk">Ad 1 · AI fashion models · live since 1 Sep 2026</p>
+          <blockquote>“Online seller? Watch this. Upload 1 product photo → instantly place it on AI fashion models.”</blockquote>
+          <p class="au-adh">Headline: Boost sales with stunning AI-edited photos—fast and easy.</p>
+          <dl>
+            <dt>Welcome</dt><dd>“1 product photo. Instantly on an AI model.”</dd>
+            <dt>Offered first</dt><dd>Clothes, then an AI model on their own shirt</dd>
+          </dl>
+          <button type="button" class="au-lnk" onclick="seeAd('a')">Open the flow from this ad</button>
+        </div>
+      </article>
+      <article class="au-adc">
+        <img src="assets/ads/ad-b.jpg" alt="A frame from the ad">
+        <div>
+          <p class="au-adk">Ad 2 · Your product, anywhere · live since 25 Oct 2026</p>
+          <blockquote>“Bad product photos cost you sales. Snap your product once, and Bazaart's AI puts it on marble, the beach, in a café, anywhere”</blockquote>
+          <p class="au-adh">Video: “Your ads with Bazaart” against “Your ads without Bazaart”, on jewelry.</p>
+          <dl>
+            <dt>Welcome</dt><dd>“Snap it once. Put it anywhere.”</dd>
+            <dt>Offered first</dt><dd>Jewelry &amp; accessories</dd>
+          </dl>
+          <button type="button" class="au-lnk" onclick="seeAd('b')">Open the flow from this ad</button>
+        </div>
+      </article>
+    </div>
+    <p class="au-adn">Both ads already ask “Online seller?”, so “Business or Personal” isn’t asked again; “What do you sell?” takes its place (idea 1). The ads link to your App Store page, and some versions of Ad 1 to bazaart.com/edit-photos-app/. In Apple Ads you hold about 97% of the US searches for your own name, a strong brand defence; a few terms with little share, like “vacation rentals” (1%), bring people who aren’t looking for a photo editor. That data is account-level, so it can’t tell your two apps apart. This layer carries no range: only a test per ad can give one.</p>
+  </div>
+</section>
+
+<section class="au-sec au-white" id="prototype">
+  <div class="au-wrap">
+    <div class="au-proto-h">
+      <p class="au-kicker">The prototype</p>
+      <h2 class="au-h2">Every idea, inside your own onboarding. <span>Starting from your ad.</span></h2>
+      <p>Tap through it like a new user from Meta, or jump straight to an idea. Numbered chips mark the screens that carry one.</p>
+    </div>
+    <div class="au-langrow"><span>The ad they saw</span><div class="au-lsw" role="group" aria-label="The ad they saw"><button type="button" data-pick="ad:a">Ad 1 · AI fashion models</button><button type="button" data-pick="ad:b">Ad 2 · Anywhere</button></div></div>
+    <div class="au-langrow" id="langRow" hidden><span>Prototype language</span><div class="au-lsw" id="langSw" role="group" aria-label="Prototype language"></div></div>
+    <div class="au-seg" id="chips" role="tablist" aria-label="Screens"></div>
+    <div class="au-stage">
+      <div class="phone"><div class="phone-in">
+        <div class="island"></div>
+        <div class="sbar"><span>9:41</span><span>●●● ▮</span></div>
+
+<!-- SCREENS:START — one section.scr[data-id=ID] per screen, in flow order. Only the screens an idea lands on,
+     plus the context needed to read the flow (~8–10). Wiring: data-go="<id>" · data-back · data-pick="key:value"
+     (+ data-advance="<id>") · data-toggle="key:value" · data-bind="key" / "label:key" / "count:key" ·
+     data-requires="key" · data-show="key:value" · data-input="key" · class="scr sheet" slides up (offer paywall).
+     RULE: images only from assets/ (their app, their site, App Store) — never stock, never hotlinked.
+     Extras: data-t="key" = translatable (markup is CONTENT.langs[0]; other languages in CONTENT.i18n) — keep data-t on
+     leaf-ish elements, never on an element that also carries data-bind/data-pick/data-show;
+     data-langtoggle cycles the language (their own language pill); data-aside keeps a screen out of the flow
+     (the paywall TODAY, rendered only for the side-by-side still). -->
+<section class="scr ad dk" data-id="ad">
+  <img class="adimg" data-show="ad:a" src="assets/ads/ad-a.jpg" alt="">
+  <img class="adimg" data-show="ad:b" src="assets/ads/ad-b.jpg" alt="">
+  <div class="adtop"></div>
+  <div class="adsw"><button data-pick="ad:a"><span data-t="ad1">Ad 1 · AI models</span></button><button data-pick="ad:b"><span data-t="ad2">Ad 2 · Anywhere</span></button></div>
+  <div class="adside"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M20 12a8 8 0 0 1-11.8 7L4 20l1-4.2A8 8 0 1 1 20 12z"/></svg><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.7" stroke-linejoin="round"><path d="M21 4L3 11l7 2.5L12.5 21z"/></svg></div>
+  <div class="adbot">
+    <div class="adpg"><img src="assets/brand/logo-2.svg" alt=""><div>Bazaart<small data-t="sp">Sponsored</small></div></div>
+    <p class="adtx" data-show="ad:a">Online seller? Watch this. Upload 1 product photo → instantly place it on AI fashion models. Perfect for clothes, jewelry, shoes, hats—no photoshoot needed.</p>
+    <p class="adtx" data-show="ad:b">Bad product photos cost you sales. Snap your product once, and Bazaart's AI puts it on marble, the beach, in a café, anywhere</p>
+    <button class="adcta" data-go="welcome"><span><small data-show="ad:a">Boost sales with stunning AI-edited photos—fast and easy.</small>Install Now</span><svg viewBox="0 0 14 14" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M5 2.5L9.5 7 5 11.5"/></svg></button>
+  </div>
+</section>
+
+<section class="scr dk wel" data-id="welcome">
+  <div class="welart" data-show="ad:a"><img class="welbg" src="assets/crop/shirt-after.png" alt=""><img class="welin" src="assets/crop/shirt-before.png" alt=""></div>
+  <div class="welart" data-show="ad:b"><img class="welbg" src="assets/crop/chair-split.png" alt=""></div>
+  <div class="welshade"></div>
+  <div class="segs"><i class="on"></i><i></i><i></i></div>
+  <h1 class="welh" data-show="ad:a"><span data-t="wa">1 product photo.<br>Instantly on an AI model.</span></h1>
+  <h1 class="welh" data-show="ad:b"><span data-t="wb">Snap it once.<br>Put it anywhere.</span></h1>
+  <button class="wbtn" data-go="sell"><span data-t="cont">Continue</span></button>
+</section>
+
+<section class="scr" data-id="sell">
+  <div class="qtop"><button class="qskip" data-go="make"><span data-t="skip">Skip</span></button></div>
+  <div class="qprog"><i style="width:55%"></i></div>
+  <img class="qart" src="assets/crop/quiz-art.png" alt="">
+  <div class="qbody">
+    <h1 class="qh"><span data-t="sellq">What do you sell?</span></h1>
+    <p class="qsub"><span data-t="sells">We’ll make your first product shot with it.</span></p>
+    <div class="qlist">
+      <button class="qrow" data-pick="sell:clothes"><span class="qi">👕</span><span class="qt" data-t="o1">Clothes</span><span class="qc"></span></button>
+      <button class="qrow" data-pick="sell:jewelry"><span class="qi">💍</span><span class="qt" data-t="o2">Jewelry &amp; accessories</span><span class="qc"></span></button>
+      <button class="qrow" data-pick="sell:home"><span class="qi">🏺</span><span class="qt" data-t="o3">Home &amp; decor</span><span class="qc"></span></button>
+      <button class="qrow" data-pick="sell:other"><span class="qi">✨</span><span class="qt" data-t="o4">Something else</span><span class="qc"></span></button>
+    </div>
+    <button class="qnext" data-go="make"><span data-t="next">Next</span></button>
+  </div>
+</section>
+
+<section class="scr ed" data-id="make">
+  <div class="edtop">
+    <button class="edc" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="edc dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></span>
+    <span class="edpill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 4H7a3 3 0 0 0-3 3v9"/></svg><b>···</b></span>
+    <span class="edgo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></span>
+  </div>
+  <div class="edcan">
+    <div class="edph">
+      <img data-pic="clothes" src="assets/crop/shirt-before.png" alt="">
+      <img data-pic="jewelry" src="assets/crop/ear-before.png" alt="">
+      <img data-pic="home" src="assets/crop/vase-before.png" alt="">
+      <div class="edbusy" data-show="made:busy"><i></i><span data-t="sec">Just a sec...</span></div>
+    </div>
+    <p class="edcap"><span data-t="mk1">Your photo, as you shot it. One tap does the rest.</span></p>
+  </div>
+  <div class="edtip"><span class="jTip"></span></div>
+  <div class="edchips">
+    <span class="edspark">✦</span>
+    <button class="edchip hot jMake" data-pic="model"><span data-t="chip1">AI model</span></button>
+    <button class="edchip hot jMake" data-pic="studio">Realistic Studio Product</button>
+    <span class="edchip">Remove…</span>
+  </div>
+  <div class="edbar"><span class="edplus">+</span><span class="edin"><span data-t="ewai">Edit with AI</span></span></div>
+</section>
+
+<section class="scr ed" data-id="result">
+  <div class="edtop">
+    <button class="edc" data-back aria-label="Back"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 5l-7 7 7 7"/></svg></button>
+    <span class="edc dim"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 14L4 9l5-5"/><path d="M4 9h10a6 6 0 0 1 0 12h-3"/></svg></span>
+    <span class="edpill"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="3"/><path d="M16 4H7a3 3 0 0 0-3 3v9"/></svg><b>···</b></span>
+    <span class="edgo"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 15V4M7 9l5-5 5 5"/><path d="M5 14v4a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2v-4"/></svg></span>
+  </div>
+  <div class="rsph">
+    <img class="rsbig" data-pic="clothes" src="assets/crop/shirt-after.png" alt="">
+    <img class="rsbig" data-pic="jewelry" src="assets/crop/ear-after.png" alt="">
+    <img class="rsbig" data-pic="home" src="assets/crop/vase-after.png" alt="">
+    <img class="rsin" data-pic="clothes" src="assets/crop/shirt-before.png" alt="">
+    <img class="rsin" data-pic="jewelry" src="assets/crop/ear-before.png" alt="">
+    <img class="rsin" data-pic="home" src="assets/crop/vase-before.png" alt="">
+  </div>
+  <div class="rssheet">
+    <h2 class="rsh"><span class="jDone"></span></h2>
+    <p class="rss"><span data-t="rs1">Watermark-free saving, every AI tool and unlimited shots come with Premium.</span></p>
+    <button class="qnext" data-go="paywall"><span data-t="cont">Continue</span></button>
+  </div>
+</section>
+
+<section class="scr dk pw" data-id="paywall">
+  <div class="pwbg">
+    <img data-pic="clothes" src="assets/crop/shirt-after.png" alt="">
+    <img data-pic="jewelry" src="assets/crop/ear-after.png" alt="">
+    <img data-pic="home" src="assets/crop/vase-after.png" alt="">
+  </div>
+  <div class="pwshade"></div>
+  <button class="pwx" data-go="offer" aria-label="Close">✕</button>
+  <div class="pwtop">
+    <h1 class="pwh"><span class="jPwh"></span></h1>
+    <p class="pws"><span data-t="pws">Unlock all AI tools, unlimited content, save without watermark</span></p>
+  </div>
+  <div class="pwbot">
+    <p class="pwproof"><span class="pwstars">★★★★★</span> <span data-t="proof">4.8 from 262K App Store ratings</span></p>
+    <button class="pwp" data-pick="plan:year"><span class="pwr"></span><span class="pwn"><span data-t="yr">Yearly</span> <em class="pwbadge" data-t="save">SAVE 42%</em></span><span class="pwv"><b data-t="yrM">$7.00 / month</b><small data-t="yrP">$83.99 per year</small></span></button>
+    <button class="pwp" data-pick="plan:month"><span class="pwr"></span><span class="pwn" data-t="mo">Monthly</span><span class="pwv"><span data-show="trial:off"><span data-t="moP">$11.99 per month</span></span><span data-show="trial:on"><span data-t="mo3">3 days free</span></span></span></button>
+    <button class="pwtg jTrial"><span class="jTgl"></span><i class="pwsw"></i></button>
+    <button class="pwcta" data-go="signup"><span class="jCta"></span></button>
+    <p class="pwfine"><span class="jFine"></span></p>
+    <p class="pwmil"><span data-t="mil">Join a million+ people who create professional-looking designs every month.</span></p>
+    <div class="pwlegal"><span data-t="rest">Restore purchases</span><span data-t="tp">Terms &amp; Privacy</span></div>
+  </div>
+</section>
+
+<section class="scr sheet of" data-id="offer">
+  <div class="ofsh">
+    <button class="ofx" data-go="signup" aria-label="Close">✕</button>
+    <div class="ofic"><img src="assets/brand/logo-2.svg" alt=""></div>
+    <h1 class="ofh"><span data-t="ofh">Not ready for a year?</span></h1>
+    <p class="ofs"><span data-t="ofs">Start with Monthly. Try it free for 3 days, then $11.99 per month. Cancel anytime.</span></p>
+    <ul class="ofl">
+      <li><span data-t="of1">All AI tools, including AI models and studio backgrounds</span></li>
+      <li><span data-t="of2">Unlimited content</span></li>
+      <li><span data-t="of3">Save without watermark</span></li>
+    </ul>
+    <button class="qnext" data-go="signup"><span data-t="ofc">Try Monthly free for 3 days</span></button>
+    <button class="ofno" data-go="signup"><span data-t="ofn">Not now</span></button>
+  </div>
+</section>
+
+<section class="scr su" data-id="signup">
+  <img class="suart" src="assets/crop/hero-flyer.png" alt="">
+  <button class="sunot"><span data-t="nn">Not now</span></button>
+  <div class="subody">
+    <img class="sulogo" src="assets/brand/logo-2.svg" alt="">
+    <h1 class="suh"><span data-t="suh">Welcome to Bazaart</span></h1>
+    <p class="sus"><span data-t="sus">Join a million+ people who create professional-looking designs every month.</span></p>
+    <button class="subtn ap"><span data-t="sa">Continue with Apple</span></button>
+    <button class="subtn fb"><span data-t="sf">Continue with Facebook</span></button>
+    <button class="subtn gg"><span data-t="sg">Continue with Google</span></button>
+    <p class="sulegal"><span data-t="sl">By signing up, you agree to our Terms and Privacy policy</span></p>
+  </div>
+</section>
+
+<section class="scr dk pw tdy" data-id="today" data-aside>
+  <div class="tdbg"><img src="assets/crop/today-bg.png" alt=""></div>
+  <div class="pwshade"></div>
+  <button class="pwx" aria-label="Close">✕</button>
+  <div class="pwtop">
+    <h1 class="pwh tdh">Try Premium</h1>
+    <p class="pws">Unlock all AI tools, unlimited content, save without watermark</p>
+  </div>
+  <div class="pwbot">
+    <div class="tdrow"><span class="pwr"></span><span class="pwn">Monthly</span><span class="pwv">$11.99 per month</span></div>
+    <div class="tdrow on"><span class="pwr"></span><span class="pwn">Yearly</span><span class="pwv">$71.99 per year</span></div>
+    <div class="pwtg"><span>Not sure? Try it free</span><i class="pwsw off"></i></div>
+    <div class="pwcta">Continue</div>
+    <p class="pwfine tdf">$71.99 per year</p>
+    <div class="pwlegal"><span>Restore purchases</span><span>Terms &amp; Privacy</span></div>
+  </div>
+</section>
+<!-- SCREENS:END -->
+
+      </div></div>
+      <div class="au-pn" id="panel" aria-live="polite"></div>
+    </div>
+    <p class="au-hint">Switch the ad above the screens and the welcome follows it. Pick what they sell, tap the AI tool, then close the paywall with ✕ to see idea 4. Portuguese with Brazil prices is one tap away.</p>
+    <!-- shown when CONTENT.liveUrl is set: assets/qr-app.png = qr.swift "<liveUrl>?app" -->
+    <div class="au-qr" id="qrCard" hidden><img src="assets/qr-app.png" alt="QR code that opens the prototype full screen"><div><b>Try it on your phone</b><p>Scan to open the prototype full screen, the way a new user would see it.</p></div></div>
+    <div class="au-mobw" id="qrMob" hidden><a class="au-btn" href="?app">Open it full screen</a></div>
+  </div>
+</section>
+
+<!-- the paywall TODAY vs PROPOSED — built from CONTENT.compare (stills: assets/hero/<today>.png, <proposed>.png) -->
+<section class="au-sec" id="compare" hidden><div class="au-wrap" id="cmpBody"></div></section>
+
+<footer class="au-foot" id="sources">
+  <div class="au-wrap">
+    <details id="srcDetails">
+      <summary>Where the numbers come from</summary>
+      <div class="au-srcs" id="srcBody"></div>
+    </details>
+    <p class="au-fine" id="fine"></p>
+    <div class="au-cta-line">
+      <p>Every screen here can be built and A/B tested in Adapty’s Flow Builder, with no app release.</p>
+      <a class="au-btn" href="https://adapty.io/flow-paywall-builder/" target="_blank" rel="noopener">About Flow Builder</a>
+    </div>
+  </div>
+</footer>
+
+<!-- extras: video dialog (CONTENT.video), ?app bar, ?tour overlay (CONTENT.tour) -->
+<dialog class="au-vid" id="vid" aria-label="Walkthrough video">
+  <div class="au-vid-in"><video id="vidEl" controls muted playsinline preload="none"></video></div>
+  <div class="au-vid-bar"><a id="vidDl" download>Download the MP4</a><button type="button" class="au-vid-x" id="vidX">Close</button></div>
+</dialog>
+<div class="au-scrim" id="abScrim"></div>
+<div class="au-appbar" id="appbar">
+  <button type="button" class="au-ab-why" id="abWhy"><i></i><span id="abT"></span><em>Why ↑</em></button>
+  <div class="au-lsw" id="abLang" role="group" aria-label="Language"></div>
+</div>
+<div class="au-tour" aria-hidden="true">
+  <div class="au-tb"><img src="assets/brand/appstore-icon.jpg" alt="">Growth Audit <small>· Bazaart</small></div>
+  <div class="au-tby">Prepared by Adapty</div>
+  <div class="au-tcap" id="tCap"></div>
+  <div class="au-ttap" id="tTap"></div>
+  <div class="au-tprog"><i id="tProg"></i></div>
+  <div class="au-tintro" id="tIntro"></div>
+  <div class="au-tend" id="tEnd"></div>
+</div>
+
+<!-- CONTENT — all the audit's words and numbers, as data. Schema (brand-check enforces it):
+     ideas  : 3–5 rows, ranked (the audit is five ideas, never fifteen). screen = the screen that shows it.
+     panel  : one entry per screen. idea = its number in ideas (1-based) or 0 for a context screen.
+              why on an idea screen reads "<b>Try</b> X, <b>because</b> Y." in ≤ 45 words; iv = its range.
+              why on a context screen is one line saying what it sets up.
+     hero   : three screen ids shown as stills in the hero — run hero-stills.sh after the screens are done.
+     outcome: combined "up to" numbers, PS-deck style, never above the ceiling of the per-idea ranges.
+     sources: public facts only — App Store, their site, their screens. No sales research on this page.
+     EXTRAS (each one hides itself when left empty):
+     langs  : [{"code":"en","name":"English"},{"code":"es","name":"Español · Spain prices"}] — first = the markup's language
+     i18n   : {"es": {"<data-t key>": "text with {tokens}"}} — every data-t key, for every language after the first
+     prices : {"es": {"yr": "39,99 €", …}} — {tokens} in i18n strings; that storefront's real IAP prices
+     labelsI18n: {"es": {"goal": {"a": "…"}}} — C.labels per language (data-bind="label:…")
+     liveUrl: final Pages URL (QR card + video end card); the QR file encodes liveUrl + "?app"
+     video / poster: "assets/walkthrough.mp4" / "assets/walkthrough-poster.jpg" (record-video.sh)
+     compare: {today, proposed, kicker, title, sub, todayCap, rows:[{h, idea, was, now}], kept} — today = a data-aside screen
+     tour   : {segments:[{id, d, st, tap:[selector-in-screen, ms], pop, reveal, end}], captions:{id:{n|k, t, l, o, ol}},
+              introLede, endTitle} — ~30 s total; the last segment has end:true (the end card) -->
+<script type="application/json" id="content">
+{
+ "app": "Bazaart",
+ "state": {
+  "ad": "a",
+  "sell": "clothes",
+  "made": "",
+  "plan": "year",
+  "trial": "on"
+ },
+ "labels": {
+  "sell": {
+   "clothes": "clothes",
+   "jewelry": "jewelry",
+   "home": "home decor",
+   "other": "product"
+  }
+ },
+ "chips": {
+  "ad": "Your ad",
+  "welcome": "Welcome",
+  "sell": "What you sell",
+  "make": "First shot",
+  "result": "Result",
+  "paywall": "Paywall",
+  "offer": "On close",
+  "signup": "Sign-up"
+ },
+ "hero": [
+  "result",
+  "paywall",
+  "ad"
+ ],
+ "outcome": {
+  "cr": "+20%",
+  "arpu": "+15%"
+ },
+ "ideas": [
+  {
+   "screen": "sell",
+   "title": "Keep the ad’s promise, then ask what they sell",
+   "what": "Your Meta ads say “Upload 1 product photo → instantly place it on AI fashion models”, yet every install opens on “Get your design superpowers” and asks “Business or Personal?”. Open on the ad’s words and ask what they sell instead: the answer picks the photo, the tool and the paywall headline.",
+   "impact": "+10–20%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "make",
+   "title": "Their first product shot, before the paywall",
+   "what": "Today the hands-on tools (remove objects, remove background, magic background) start only after the paywall, so people see the price before they see a result. Let them tap one AI tool on a photo of what they sell, then show the price.",
+   "impact": "+10–20%",
+   "il": "CR to purchase"
+  },
+  {
+   "screen": "paywall",
+   "title": "Proof, a clear trial and the year as a monthly price",
+   "what": "Your paywall shows no proof, the trial hides behind “Not sure? Try it free” switched off (so “Continue” charges at once), and $83.99 a year never reads as $7.00 a month, 42% less than $11.99 monthly. Put 4.8 stars from 262K ratings under the headline, the 7-day trial on by default, and SAVE 42% on the year.",
+   "impact": "+10–15%",
+   "il": "CR · ARPU +10–15%"
+  },
+  {
+   "screen": "offer",
+   "title": "Catch the people who close the paywall",
+   "what": "Today ✕ simply ends the sale. Offer one smaller step instead: Monthly, 3 days free, then $11.99 a month. It is the monthly trial your own paywall already offers, not a discount.",
+   "impact": "+10–15%",
+   "il": "ARPU"
+  },
+  {
+   "screen": "signup",
+   "title": "Ask for the account after the paywall",
+   "what": "Today the sign-up wall (Apple, Facebook, Google) and the notification prompt stand between the quiz and the paywall. Ask after it, when there is a shot worth saving to an account; your sign-up screen stays word for word.",
+   "impact": "+5–10%",
+   "il": "CR · ARPU +10–17%"
+  }
+ ],
+ "panel": {
+  "ad": {
+   "idea": 0,
+   "t": "Where they came from: your Meta ad",
+   "why": "Two of your live Meta ads, copy word for word. Switch between them: the welcome and the product offered first follow the ad."
+  },
+  "welcome": {
+   "idea": 0,
+   "t": "The welcome repeats the ad",
+   "why": "Instead of “Get your design superpowers”, the first screen says what the ad promised, with your own before-and-after art. It sets up idea 1."
+  },
+  "sell": {
+   "idea": 1,
+   "t": "Keep the ad’s promise, then ask what they sell",
+   "why": "<b>Try</b> asking what they sell, with the ad’s product on top, <b>because</b> “Online seller?” already answered Business or Personal, and this answer can pick the photo, the tool and the paywall headline that follow.",
+   "iv": "CR +10–20%",
+   "il": "to purchase"
+  },
+  "make": {
+   "idea": 2,
+   "t": "Their first product shot, before the paywall",
+   "why": "<b>Try</b> one tap on an AI tool, on a photo of their kind of product, before the price, <b>because</b> today your hands-on tutorials start only after the paywall, so people pay before they have seen a result.",
+   "iv": "CR +10–20%",
+   "il": "to purchase",
+   "also": ""
+  },
+  "result": {
+   "idea": 0,
+   "t": "Their result, named",
+   "why": "The result names what they sell and hands the same shot to the paywall."
+  },
+  "paywall": {
+   "idea": 3,
+   "t": "Proof, a clear trial and the year as a monthly price",
+   "why": "<b>Try</b> your 4.8 rating, the 7-day trial switched on and the year shown as $7.00 a month, <b>because</b> today the paywall carries no proof, the trial hides behind a switched-off toggle and $83.99 never reads as 42% less than monthly.",
+   "iv": "CR +10–15%",
+   "il": "to purchase, plus ARPU +10–15%",
+   "also": "The headline names what they sell (idea 1) over the shot they just made (idea 2)."
+  },
+  "offer": {
+   "idea": 4,
+   "t": "Catch the people who close the paywall",
+   "why": "<b>Try</b> one smaller step when they close: Monthly, 3 days free, then $11.99 a month, <b>because</b> today ✕ ends the sale, and this is a trial your own paywall already offers, not a discount.",
+   "iv": "ARPU +10–15%",
+   "il": "from people who closed the paywall"
+  },
+  "signup": {
+   "idea": 5,
+   "t": "Ask for the account after the paywall",
+   "why": "<b>Try</b> your sign-up screen, word for word, after the paywall, <b>because</b> today it and the notification prompt stand between the quiz and the price, and after a first shot there is something worth saving to an account.",
+   "iv": "CR +5–10%",
+   "il": "to purchase, plus ARPU +10–17%"
+  }
+ },
+ "langs": [
+  {
+   "code": "en",
+   "name": "English"
+  },
+  {
+   "code": "pt",
+   "name": "Português · Brazil prices"
+  }
+ ],
+ "i18n": {
+  "pt": {
+   "ad1": "Anúncio 1 · Modelos de IA",
+   "ad2": "Anúncio 2 · Em qualquer lugar",
+   "sp": "Patrocinado",
+   "wa": "1 foto do produto.<br>Na hora, em um modelo de IA.",
+   "wb": "Fotografe uma vez.<br>Coloque em qualquer lugar.",
+   "cont": "Continuar",
+   "skip": "Pular",
+   "sellq": "O que você vende?",
+   "sells": "Vamos criar sua primeira foto de produto com isso.",
+   "o1": "Roupas",
+   "o2": "Joias e acessórios",
+   "o3": "Casa e decoração",
+   "o4": "Outra coisa",
+   "next": "Próximo",
+   "sec": "Só um segundo...",
+   "mk1": "Sua foto, do jeito que você tirou. Um toque faz o resto.",
+   "chip1": "Modelo de IA",
+   "ewai": "Editar com IA",
+   "rs1": "Salvar sem marca d’água, todas as ferramentas de IA e fotos ilimitadas vêm com o Premium.",
+   "pws": "Desbloqueie todas as ferramentas de IA, conteúdo ilimitado, salve sem marca d’água",
+   "proof": "4,9 de 48 mil avaliações na App Store",
+   "mo": "Mensal",
+   "moP": "{mo} por mês",
+   "mo3": "3 dias grátis",
+   "yr": "Anual",
+   "save": "ECONOMIZE 33%",
+   "yrM": "{yrm} / mês",
+   "yrP": "{yr} por ano",
+   "mil": "Junte-se a mais de um milhão de pessoas que criam designs com cara de profissional todo mês.",
+   "rest": "Restaurar compras",
+   "tp": "Termos e Privacidade",
+   "ofh": "Ainda não quer um ano?",
+   "ofs": "Comece com o Mensal. Teste grátis por 3 dias, depois {mo} por mês. Cancele quando quiser.",
+   "of1": "Todas as ferramentas de IA, incluindo modelos de IA e fundos de estúdio",
+   "of2": "Conteúdo ilimitado",
+   "of3": "Salve sem marca d’água",
+   "ofc": "Testar o Mensal grátis por 3 dias",
+   "ofn": "Agora não",
+   "nn": "Agora não",
+   "suh": "Boas-vindas ao Bazaart",
+   "sus": "Junte-se a mais de um milhão de pessoas que criam designs com cara de profissional todo mês.",
+   "sa": "Continuar com a Apple",
+   "sf": "Continuar com o Facebook",
+   "sg": "Continuar com o Google",
+   "sl": "Ao se cadastrar, você concorda com nossos Termos e a Política de Privacidade"
+  }
+ },
+ "prices": {
+  "en": {
+   "yr": "$83.99",
+   "mo": "$11.99",
+   "yrm": "$7.00"
+  },
+  "pt": {
+   "yr": "R$ 239,90",
+   "mo": "R$ 29,90",
+   "yrm": "R$ 19,99"
+  }
+ },
+ "labelsI18n": {
+  "pt": {
+   "sell": {
+    "clothes": "roupas",
+    "jewelry": "joias",
+    "home": "decoração",
+    "other": "produto"
+   }
+  }
+ },
+ "liveUrl": "https://eddieatadapty.github.io/bazaart-flow-rebuild/",
+ "video": "assets/walkthrough.mp4",
+ "poster": "assets/walkthrough-poster.jpg",
+ "compare": {
+  "today": "today",
+  "proposed": "paywall",
+  "kicker": "The paywall, side by side",
+  "title": "Your paywall today, and proposed.",
+  "sub": "Same photo-backed layout, same type, same white button.",
+  "todayCap": "rebuilt from your recorded onboarding (July 2025); $71.99 a year is no longer in your App Store price list, which now shows $83.99",
+  "rows": [
+   {
+    "h": "Headline",
+    "idea": 1,
+    "was": "Try Premium",
+    "now": "Names what they sell, e.g. “Keep making clothes shots like this”, over the shot they just made"
+   },
+   {
+    "h": "Proof",
+    "idea": 3,
+    "was": "None on the paywall",
+    "now": "★★★★★ 4.8 from 262K App Store ratings, plus your “million+ people” line"
+   },
+   {
+    "h": "Trial",
+    "idea": 3,
+    "was": "“Not sure? Try it free”, switched off, so Continue charges at once",
+    "now": "“Free for 7 days”, on by default, and the button reads Try it free"
+   },
+   {
+    "h": "Yearly price",
+    "idea": 3,
+    "was": "$71.99 per year",
+    "now": "Yearly first: $7.00 / month, $83.99 per year, SAVE 42% against monthly"
+   },
+   {
+    "h": "On close",
+    "idea": 4,
+    "was": "✕ ends it",
+    "now": "Monthly, 3 days free, then $11.99 per month"
+   }
+  ],
+  "kept": "Kept as it is: the photo behind the plans, “Unlock all AI tools, unlimited content, save without watermark”, the two plan rows, the switch, the white button, Restore purchases and Terms & Privacy."
+ },
+ "tour": {
+  "introLede": "Five ideas to turn more online sellers into subscribers, starting from your Meta ad.",
+  "endTitle": "From your ad to the paywall, in your own design.",
+  "segments": [
+   {
+    "id": "ad",
+    "d": 3200,
+    "st": {
+     "ad": "b",
+     "sell": "jewelry"
+    }
+   },
+   {
+    "id": "ad",
+    "d": 2600,
+    "st": {
+     "ad": "a",
+     "sell": "clothes"
+    },
+    "tap": [
+     ".adcta",
+     2100
+    ]
+   },
+   {
+    "id": "welcome",
+    "d": 2600,
+    "tap": [
+     ".wbtn",
+     2100
+    ]
+   },
+   {
+    "id": "sell",
+    "d": 1700
+   },
+   {
+    "id": "sell",
+    "d": 1700,
+    "st": {
+     "sell": "jewelry"
+    },
+    "tap": [
+     ".qnext",
+     1250
+    ]
+   },
+   {
+    "id": "make",
+    "d": 2500,
+    "tap": [
+     ".edchip.hot",
+     1900
+    ]
+   },
+   {
+    "id": "make",
+    "d": 1300,
+    "st": {
+     "made": "busy"
+    }
+   },
+   {
+    "id": "result",
+    "d": 2700,
+    "st": {
+     "made": "done"
+    },
+    "pop": ".rsin"
+   },
+   {
+    "id": "paywall",
+    "d": 3900,
+    "tap": [
+     ".pwx",
+     3400
+    ]
+   },
+   {
+    "id": "offer",
+    "d": 3000,
+    "tap": [
+     ".ofno",
+     2500
+    ]
+   },
+   {
+    "id": "signup",
+    "d": 1900
+   },
+   {
+    "id": "signup",
+    "d": 3200,
+    "end": true
+   }
+  ],
+  "captions": {
+   "ad": {
+    "k": "Your ads",
+    "t": "Two of your live Meta ads",
+    "l": "Switch the ad: the first screens follow it."
+   },
+   "welcome": {
+    "k": "Context",
+    "t": "The welcome repeats the ad",
+    "l": "Not “Get your design superpowers”."
+   },
+   "sell": {
+    "n": 1,
+    "t": "Ask what they sell",
+    "l": "The ad already asked “Online seller?”",
+    "o": "+10–20%",
+    "ol": "CR to purchase"
+   },
+   "make": {
+    "n": 2,
+    "t": "A first product shot, before the price",
+    "l": "One tap on a photo of their kind of product.",
+    "o": "+10–20%",
+    "ol": "CR to purchase"
+   },
+   "result": {
+    "k": "Context",
+    "t": "Their result, named",
+    "l": "The paywall keeps the same shot."
+   },
+   "paywall": {
+    "n": 3,
+    "t": "Proof, a clear trial, $7.00 a month",
+    "l": "4.8 from 262K ratings. 7 days free, on by default.",
+    "o": "+10–15%",
+    "ol": "CR to purchase"
+   },
+   "offer": {
+    "n": 4,
+    "t": "Catch the people who close",
+    "l": "Monthly, 3 days free, then $11.99.",
+    "o": "+10–15%",
+    "ol": "ARPU"
+   },
+   "signup": {
+    "n": 5,
+    "t": "Sign-up, after the paywall",
+    "l": "Word for word, just later.",
+    "o": "+5–10%",
+    "ol": "CR to purchase"
+   }
+  }
+ },
+ "grounding": "Impact ranges are Adapty’s expected effect from teardowns and A/B tests across 30,000+ subscription apps, not measured lift for Bazaart. They overlap, so they don’t add up. The ads layer carries no range: only a test per ad can give one.",
+ "sources": [
+  {
+   "group": "Prices",
+   "items": [
+    {
+     "dt": "$83.99 a year · $11.99 a month",
+     "dd": "Bazaart Premium Yearly and Bazaart Premium Monthly in the US <a href=\"https://apps.apple.com/us/app/bazaart-ai-photo-editor-design/id515094775\" target=\"_blank\" rel=\"noopener\">App Store In-App Purchases list</a>, 9 Nov 2026. $11.99 is the most common of eight monthly entries."
+    },
+    {
+     "dt": "$7.00 a month · SAVE 42%",
+     "dd": "Our arithmetic: $83.99 ÷ 12 = $7.00; $11.99 × 12 = $143.88."
+    },
+    {
+     "dt": "R$ 239,90 a year · R$ 29,90 a month",
+     "dd": "The lowest yearly and monthly entries in the <a href=\"https://apps.apple.com/br/app/bazaart-editor-de-fotos-com-ia/id515094775\" target=\"_blank\" rel=\"noopener\">Brazil App Store list</a>. R$ 19,99 a month and 33% are our arithmetic."
+    },
+    {
+     "dt": "7 days free (yearly) · 3 days free (monthly)",
+     "dd": "Your recorded paywall, July 2025. Trial lengths aren’t in the public list, so please confirm they still apply."
+    },
+    {
+     "dt": "Not used",
+     "dd": "$14.99 monthly; “Bazaart Premium Photo Editing” $4.99 (no period listed); Brazil R$ 299,90 yearly and monthly R$ 39,90 to R$ 69,90; $71.99 a year from the July 2025 recording, no longer in the US list."
+    }
+   ]
+  },
+  {
+   "group": "Proof",
+   "items": [
+    {
+     "dt": "4.8 from 262K ratings",
+     "dd": "US App Store listing, 9 Nov 2026 (4.80 from 261,557 ratings)."
+    },
+    {
+     "dt": "4,9 de 48 mil avaliações",
+     "dd": "Brazil App Store listing, 9 Nov 2026 (4.86 from 48,533 ratings)."
+    },
+    {
+     "dt": "“a million+ people who create professional-looking designs every month”",
+     "dd": "Your own sign-up screen, word for word."
+    }
+   ]
+  },
+  {
+   "group": "Features and copy",
+   "items": [
+    {
+     "dt": "Paywall, quiz and sign-up copy",
+     "dd": "Your recorded iOS onboarding (ScreensDesign replay, July 2025), word for word where a screen is kept."
+    },
+    {
+     "dt": "Ad 1",
+     "dd": "Meta Ad Library, page “Bazaart”, active in the US: “Online seller? Watch this. …”, running since 1 Sep 2026 in many versions (e.g. Library ID 1636164084777686). Versions link to your App Store page or to bazaart.com/edit-photos-app/."
+    },
+    {
+     "dt": "Ad 2",
+     "dd": "Meta Ad Library, Library ID 1648153746748529, running since 25 Oct 2026, links to your App Store page."
+    },
+    {
+     "dt": "AI model · Realistic Studio Product · Remove… · Edit with AI",
+     "dd": "Your editor, from App Store screenshots 3 and 6 (“AI model” follows your “Realistic AI models” screenshot)."
+    },
+    {
+     "dt": "Apple Ads",
+     "dd": "Account-level share of voice from third-party ad intelligence, US, 9 Oct to 9 Nov 2026. Apple doesn’t publish which of your apps each ad was for."
+    },
+    {
+     "dt": "Our words",
+     "dd": "The two welcome headlines, “What do you sell?”, the result line and the offer copy are ours, written from your ads and paywall. The Portuguese is our translation."
+    }
+   ]
+  },
+  {
+   "group": "Design",
+   "items": [
+    {
+     "dt": "Colours",
+     "dd": "Sampled from your recorded screens: #e0005d (Next), #fedfef (selected row), #e3e3e9 (editor), #00b8e6 (tutorial tooltip), #50433a (paywall). The #ff0560 to #d203b4 gradient is from bazaart.com."
+    },
+    {
+     "dt": "Type",
+     "dd": "Your typeface (NewHero) is licensed; the prototype uses Figtree, the closest Google family."
+    },
+    {
+     "dt": "Images",
+     "dd": "Product photos and results cut from your App Store screenshots 1, 2, 3 and 6; the quiz illustration from your recorded quiz; the flying hero from bazaart.com’s share image; the paywall photo (today) from your recorded paywall; ad frames from the two Meta videos."
+    }
+   ]
+  },
+  {
+   "group": "What we couldn’t see",
+   "items": [
+    {
+     "dt": "Your live flow since July 2025",
+     "dd": "The newest recording we have is July 2025, and your yearly price has moved since ($71.99 to $83.99)."
+    },
+    {
+     "dt": "Brazil paywall",
+     "dd": "Which of the eight Brazil monthly prices your paywall shows."
+    },
+    {
+     "dt": "Your test history",
+     "dd": "If you’ve already run one of these, tell us and we’ll go deeper on the rest."
+    }
+   ]
+  }
+ ]
+}
+</script>
+
+<script>
+/* per-app hooks go here: window.onSync = function(S){…}; window.onEnter = function(id, S){…}; window.onLang = function(lang){…};
+   Globals available: S (S.lang = current language), C, cur, ORDER, scr, go(), back(), jump(), sync(), setLang(), fillP(str, lang),
+   SHOT (screenshot/tour run), HERO (hero-still run). Per-language dynamic text: read S.lang in onSync. */
+/* Bazaart: the Meta ad picks the welcome and which product is offered first; what they sell picks the product
+   photo for the one-tap shot, the tool, the result and the paywall headline; the trial switch drives the CTA and the fine print. */
+var PIC = {clothes: 'clothes', jewelry: 'jewelry', home: 'home', other: 'home'};
+var TOOL = {clothes: 'model', jewelry: 'model', home: 'studio', other: 'studio'};
+var FIRST = {a: 'clothes', b: 'jewelry'};
+var TX = {
+  en: {
+    tip: {model: 'Tap AI model', studio: 'Tap Realistic Studio Product'},
+    done: function(w){ return w === 'product' ? 'Your first product shot, done in one tap.' : 'Your first ' + w + ' shot, done in one tap.'; },
+    pwh: function(w){ return 'Keep making ' + w + ' shots like this'; },
+    tglOn: {year: 'Free for 7 days', month: 'Free for 3 days'}, tglOff: 'Not sure? Try it free',
+    ctaOn: 'Try it free', ctaOff: 'Continue',
+    fine: {yearon: '7 days free, then {yr} per year. Cancel anytime.', yearoff: '{yr} per year. Cancel anytime.', monthon: '3 days free, then {mo} per month. Cancel anytime.', monthoff: '{mo} per month. Cancel anytime.'}
+  },
+  pt: {
+    tip: {model: 'Toque em Modelo de IA', studio: 'Toque em Realistic Studio Product'},
+    done: function(w){ return w === 'produto' ? 'Sua primeira foto de produto, pronta com um toque.' : 'Sua primeira foto de ' + w + ', pronta com um toque.'; },
+    pwh: function(w){ return 'Continue criando fotos de ' + w + ' assim'; },
+    tglOn: {year: 'Grátis por 7 dias', month: 'Grátis por 3 dias'}, tglOff: 'Não tem certeza? Teste grátis',
+    ctaOn: 'Testar grátis', ctaOff: 'Continuar',
+    fine: {yearon: '7 dias grátis, depois {yr} por ano. Cancele quando quiser.', yearoff: '{yr} por ano. Cancele quando quiser.', monthon: '3 dias grátis, depois {mo} por mês. Cancele quando quiser.', monthoff: '{mo} por mês. Cancele quando quiser.'}
+  }
+};
+function qa(sel){ return document.querySelectorAll(sel); }
+function seeAd(k){ S.ad = k; S.sell = FIRST[k]; jumpTo('ad'); }
+document.addEventListener('click', function(e){
+  var a = e.target.closest('[data-pick^="ad:"]'); if (a) { S.sell = FIRST[a.dataset.pick.split(':')[1]]; setTimeout(sync, 0); }
+  var m = e.target.closest('.jMake');
+  if (m && cur === 'make' && S.made !== 'busy') {
+    S.made = 'busy'; sync();
+    setTimeout(function(){ S.made = 'done'; sync(); if (cur === 'make') go('result'); }, 1300);
+  }
+  var t = e.target.closest('.jTrial');
+  if (t) { S.trial = S.trial === 'on' ? 'off' : 'on'; sync(); }
+}, true);
+window.onSync = function(S){
+  var l = S.lang === 'pt' ? 'pt' : 'en', X = TX[l], pic = PIC[S.sell] || 'home', tool = TOOL[S.sell] || 'studio';
+  qa('[data-pic]').forEach(function(el){ var v = el.dataset.pic; el.style.display = (v === pic || v === tool) ? '' : 'none'; });
+  qa('[data-pick^="sell:"]').forEach(function(b){ b.style.order = b.dataset.pick === 'sell:' + FIRST[S.ad] ? -1 : 0; });
+  var w = (C.labels.sell || {})[S.sell] || '';
+  qa('.jTip').forEach(function(e){ e.textContent = X.tip[tool]; });
+  qa('.edtip').forEach(function(e){ e.style.visibility = S.made === 'busy' ? 'hidden' : ''; });
+  qa('.jDone').forEach(function(e){ e.textContent = X.done(w); });
+  qa('.jPwh').forEach(function(e){ e.textContent = X.pwh(w); });
+  var on = S.trial === 'on';
+  qa('.jTgl').forEach(function(e){ e.textContent = on ? X.tglOn[S.plan] : X.tglOff; });
+  qa('.jTrial .pwsw').forEach(function(e){ e.classList.toggle('off', !on); });
+  qa('.jCta').forEach(function(e){ e.textContent = on ? X.ctaOn : X.ctaOff; });
+  qa('.jFine').forEach(function(e){ e.textContent = fillP(X.fine[S.plan + (on ? 'on' : 'off')], l); });
+};
+window.onEnter = function(id, S){
+  if (id === 'make' && S.made !== '') { S.made = ''; sync(); }
+};
+</script>
+<script>
+/* ============ engine — generic, do not fork per app ============ */
+var C = JSON.parse(document.getElementById('content').textContent);
+var S = C.state, scr = {}, ORDER = [], hist = [], cur = null, Q = location.search;
+var SHOT = /[?&](shot|phone|tour)\b/.test(Q), HERO = /[?&]hero\b/.test(Q);
+/* a screen with data-aside (e.g. the paywall TODAY for the side-by-side) renders for stills but is not part of the flow */
+document.querySelectorAll('.scr').forEach(function(s){ scr[s.dataset.id] = s; if (!s.hasAttribute('data-aside')) ORDER.push(s.dataset.id); });
+if (/[?&]shot\b/.test(Q)) document.documentElement.classList.add('shot');
+if (/[?&]phone\b/.test(Q)) document.documentElement.classList.add('shot', 'phoneonly');
+if (/[?&]clear\b/.test(Q)) document.documentElement.classList.add('clear');
+var IDEAS = (C.ideas || []).length;
+
+/* ---- languages: markup is the first language; C.i18n[lang][data-t key] the others; {tokens} from C.prices[lang] ---- */
+var LANGS = C.langs || [], BASE = LANGS.length ? LANGS[0].code : 'en', LANG_DONE = BASE, BASE_LABELS = JSON.parse(JSON.stringify(C.labels || {}));
+if (!S.lang) S.lang = BASE;
+function fillP(s, l){ var P = (C.prices || {})[l] || {}; return String(s).replace(/\{(\w+)\}/g, function(m, k){ return k in P ? P[k] : m; }); }
+function applyLang(){
+  var l = S.lang || BASE; if (l === LANG_DONE) return;
+  var T = (C.i18n || {})[l] || {};
+  document.querySelectorAll('.phone [data-t]').forEach(function(el){
+    if (el._base == null) el._base = el.innerHTML;
+    el.innerHTML = l === BASE || T[el.dataset.t] == null ? el._base : fillP(T[el.dataset.t], l);
+  });
+  C.labels = JSON.parse(JSON.stringify(BASE_LABELS));
+  var LL = (C.labelsI18n || {})[l] || {}; Object.keys(LL).forEach(function(k){ C.labels[k] = LL[k]; });
+  LANG_DONE = l;
+}
+function setLang(l){
+  if (!LANGS.some(function(x){ return x.code === l; })) return;
+  S.lang = l; sync();
+  document.querySelectorAll('[data-setlang]').forEach(function(b){ b.classList.toggle('on', b.dataset.setlang === l); });
+  if (window.onLang) window.onLang(l);
+}
+
+function lab(key){ var v = S[key]; var L = C.labels[key]; if (Array.isArray(v)) return v.map(function(x){ return L && L[x] || x; }).join(', '); return (L && L[v]) || v; }
+function sync(){
+  applyLang();
+  document.querySelectorAll('[data-bind]').forEach(function(el){
+    var b = el.dataset.bind, m = b.split(':');
+    el.textContent = m[0] === 'label' ? lab(m[1]) : m[0] === 'count' ? (S[m[1]] || []).length : (S[b] == null ? '' : S[b]);
+  });
+  document.querySelectorAll('[data-pick]').forEach(function(el){ var p = el.dataset.pick.split(':'); el.classList.toggle('on', S[p[0]] === p[1]); });
+  document.querySelectorAll('[data-toggle]').forEach(function(el){ var p = el.dataset.toggle.split(':'); el.classList.toggle('on', (S[p[0]] || []).indexOf(p[1]) > -1); });
+  document.querySelectorAll('[data-requires]').forEach(function(el){ el.disabled = !(S[el.dataset.requires] || []).length; });
+  document.querySelectorAll('[data-show]').forEach(function(el){ var p = el.dataset.show.split(':'); el.style.display = String(S[p[0]]) === p[1] ? '' : 'none'; });
+  if (window.onSync) window.onSync(S);
+}
+function show(id, dir){
+  var from = scr[cur], to = scr[id]; if (!to || id === cur) return;
+  var sheet = to.classList.contains('sheet');
+  if (from){
+    from.classList.remove('is-active');
+    if (sheet) from.classList.add('under');                                   /* a sheet slides up over the screen that opened it */
+    else if (dir === 'fwd' && !from.classList.contains('sheet')) from.classList.add('is-past');
+  }
+  if (!sheet) Object.keys(scr).forEach(function(k){ var u = scr[k]; if (u !== to && u.classList.contains('under')) { u.classList.remove('under'); if (dir === 'fwd') u.classList.add('is-past'); } });
+  to.classList.remove('is-past', 'under'); to.classList.add('is-active'); cur = id;
+  paint(); if (window.onEnter) window.onEnter(id, S);
+}
+function go(id){ if (cur) hist.push(cur); show(id, 'fwd'); }
+function back(){ if (hist.length) { var p = hist.pop(); scr[cur].classList.remove('is-active'); show(p, 'back'); } }
+function jump(id){
+  Object.keys(scr).forEach(function(k){ scr[k].classList.add('nofx'); scr[k].classList.remove('is-active', 'is-past', 'under'); });
+  var i = ORDER.indexOf(id); hist = ORDER.slice(0, i < 0 ? 0 : i); cur = null;
+  ORDER.slice(0, i).forEach(function(k){ if (!scr[k].classList.contains('sheet')) scr[k].classList.add('is-past'); });
+  if (scr[id] && scr[id].classList.contains('sheet')) {                        /* jumping to a sheet: its opener stays visible under it */
+    for (var j = i - 1; j >= 0; j--) if (!scr[ORDER[j]].classList.contains('sheet')) { scr[ORDER[j]].classList.remove('is-past'); scr[ORDER[j]].classList.add('under'); break; }
+  }
+  show(id, 'jump');
+  requestAnimationFrame(function(){ requestAnimationFrame(function(){ Object.keys(scr).forEach(function(k){ scr[k].classList.remove('nofx'); }); }); });
+}
+function stepBy(d){ var i = ORDER.indexOf(cur) + d; if (i >= 0 && i < ORDER.length) jump(ORDER[i]); }
+function jumpTo(id){
+  var p = document.getElementById('prototype');
+  if (p && !document.documentElement.classList.contains('appmode')) p.scrollIntoView({behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start'});
+  jump(id);
+}
+function paint(){
+  sync();
+  var c = document.getElementById('chips');
+  if (!c.childElementCount) ORDER.forEach(function(id){
+    var p = C.panel[id] || {}, b = document.createElement('button');
+    b.className = 'au-chip'; b.type = 'button'; b.dataset.id = id; b.setAttribute('role', 'tab');
+    b.innerHTML = (p.idea ? '<i>' + p.idea + '</i>' : '') + ((C.chips && C.chips[id]) || id);
+    b.onclick = function(){ jump(id); };
+    c.appendChild(b);
+  });
+  c.querySelectorAll('.au-chip').forEach(function(b){ var on = b.dataset.id === cur; b.classList.toggle('on', on); b.setAttribute('aria-selected', on); });
+  var d = C.panel[cur] || {t: cur, why: ''}, n = ORDER.indexOf(cur) + 1;
+  document.getElementById('panel').innerHTML =
+    (d.idea ? '<div class="au-pn-k"><i></i>Idea ' + d.idea + ' of ' + IDEAS + '</div>' : '<div class="au-pn-k au-ctx"><i></i>Context</div>') +
+    '<h3 class="au-pn-t">' + d.t + '</h3><p class="au-pn-h">' + d.why + '</p>' +
+    (d.iv ? '<div class="au-pn-o"><div class="au-lab">Potential outcome · based on Adapty data</div><div class="au-val"><mark>' + d.iv + '</mark></div><div class="au-sub">' + (d.il || '') + '</div></div>' : '') +
+    (d.also ? '<p class="au-pn-a">' + d.also + '</p>' : '') +
+    '<div class="au-pn-nav"><button type="button" onclick="stepBy(-1)"' + (n <= 1 ? ' disabled' : '') + '>‹ Previous</button><span>Screen ' + n + ' of ' + ORDER.length + '</span><button type="button" onclick="stepBy(1)"' + (n === ORDER.length ? ' disabled' : '') + '>Next ›</button></div>';
+  var ab = document.getElementById('abT'); if (ab) ab.textContent = (d.idea ? 'Idea ' + d.idea + ' of ' + IDEAS + ' · ' : '') + (d.t || '');
+}
+document.addEventListener('click', function(e){
+  var j = e.target.closest('[data-jumpto]'); if (j){ e.preventDefault(); jumpTo(j.dataset.jumpto); return; }
+  var L = e.target.closest('[data-setlang]'); if (L){ setLang(L.dataset.setlang); return; }
+  if (e.target.closest('[data-langtoggle]') && LANGS.length > 1){ var k = LANGS.findIndex(function(x){ return x.code === S.lang; }); setLang(LANGS[(k + 1) % LANGS.length].code); return; }
+  var el = e.target.closest('[data-go],[data-back],[data-pick],[data-toggle]'); if (!el) return;
+  if (el.dataset.pick){ var p = el.dataset.pick.split(':'); S[p[0]] = p[1]; sync(); if (el.dataset.advance) setTimeout(function(){ go(el.dataset.advance); }, 170); return; }
+  if (el.dataset.toggle){ var q = el.dataset.toggle.split(':'), a = S[q[0]] = S[q[0]] || [], i = a.indexOf(q[1]); if (i > -1) a.splice(i, 1); else a.push(q[1]); sync(); return; }
+  if ('back' in el.dataset) return back();
+  go(el.dataset.go);
+});
+document.querySelectorAll('[data-input]').forEach(function(inp){
+  inp.value = S[inp.dataset.input] || ''; inp.addEventListener('input', function(){ S[inp.dataset.input] = inp.value.trim() || 'there'; sync(); });
+});
+function $(id){ return document.getElementById(id); }
+
+/* hero stills, shortlist, outcome, sources — from CONTENT */
+$('heroPhones').innerHTML = (C.hero || []).map(function(id, i){
+  var pos = ['l', 'c', 'r'][i] || 'r', t = (C.chips && C.chips[id]) || id;
+  return '<button class="au-hp au-' + pos + '" data-jumpto="' + id + '" aria-label="Open ' + t + '"><img src="assets/hero/' + id + '.png" alt=""></button>';
+}).join('');
+$('ideaList').innerHTML = (C.ideas || []).map(function(r, i){
+  return '<article class="au-idea"><div class="au-num">0' + (i + 1) + '</div><div><h3>' + r.title + '</h3><p>' + r.what + '</p>' +
+    '<button type="button" class="au-lnk" data-jumpto="' + r.screen + '">See it on the screen</button></div>' +
+    '<div class="au-imp"><div class="au-v"><mark>' + r.impact + '</mark></div><div class="au-l">' + r.il + '</div></div></article>';
+}).join('');
+var O = C.outcome || {};
+$('bandNums').innerHTML =
+  (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') +
+  (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '');
+$('bandFn').textContent = C.grounding;
+$('fine').textContent = C.grounding + ' Prepared by Adapty.';
+$('srcBody').innerHTML = C.sources.map(function(g){
+  return '<div><h4>' + g.group + '</h4><dl>' + g.items.map(function(it){ return '<dt>' + it.dt + '</dt><dd>' + it.dd + '</dd>'; }).join('') + '</dl></div>';
+}).join('');
+function openSrc(){ var d = $('srcDetails'); d.open = true; d.scrollIntoView({block: 'start'}); }
+
+/* ---- extras: language control, the paywall side by side, QR / phone view, the video ---- */
+if (LANGS.length > 1) {
+  $('langRow').hidden = false;
+  var lb = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.name + '</button>'; }).join('');
+  $('langSw').innerHTML = lb;
+  $('abLang').innerHTML = LANGS.map(function(x){ return '<button type="button" data-setlang="' + x.code + '">' + x.code.toUpperCase() + '</button>'; }).join('');
+}
+var CM = C.compare;
+if (CM && scr[CM.today] && scr[CM.proposed]) {
+  $('compare').hidden = false; $('navCompare').hidden = false;
+  $('cmpBody').innerHTML = '<div class="au-ideas-h"><p class="au-kicker">' + (CM.kicker || 'The paywall, side by side') + '</p><h2 class="au-h2">' + (CM.title || 'Today and proposed.') + (CM.sub ? ' <span>' + CM.sub + '</span>' : '') + '</h2></div>' +
+    '<div class="au-cmp"><figure><img src="assets/hero/' + CM.today + '.png" alt="Your paywall today"><figcaption>Today <span>· ' + (CM.todayCap || 'rebuilt from your recording') + '</span></figcaption></figure>' +
+    '<ol class="au-chg">' + (CM.rows || []).map(function(r){
+      return '<li><h4>' + r.h + (r.idea ? ' <i>Idea ' + r.idea + '</i>' : '') + '</h4><span class="au-was"><em>Today</em>' + r.was + '</span><span class="au-now"><em>Proposed</em>' + r.now + '</span></li>';
+    }).join('') + '</ol>' +
+    '<figure><button type="button" class="au-cmp-go" data-jumpto="' + CM.proposed + '" aria-label="Open the proposed paywall"><img src="assets/hero/' + CM.proposed + '.png" alt="The proposed paywall"></button><figcaption>Proposed <span>· tap to try it</span></figcaption></figure></div>' +
+    (CM.kept ? '<p class="au-kept">' + CM.kept + '</p>' : '');
+}
+if (C.liveUrl) { $('qrCard').hidden = false; $('qrMob').hidden = false; }
+if (/[?&]app\b/.test(Q)) {
+  var H0 = document.documentElement; H0.classList.add('appmode');
+  var openP = function(o){ H0.classList.toggle('au-open', o); $('abWhy').querySelector('em').textContent = o ? 'Close ↓' : 'Why ↑'; };
+  $('abWhy').onclick = function(){ openP(!H0.classList.contains('au-open')); };
+  $('abScrim').onclick = function(){ openP(false); };
+}
+if (C.video) {
+  var dlg = $('vid'), vel = $('vidEl'); vel.src = C.video; if (C.poster) vel.poster = C.poster; $('vidDl').href = C.video;
+  $('heroVideo').hidden = false;
+  $('heroVideo').onclick = function(){ dlg.showModal(); vel.play().catch(function(){}); };
+  $('vidX').onclick = function(){ dlg.close(); };
+  dlg.addEventListener('close', function(){ vel.pause(); });
+  dlg.addEventListener('click', function(e){ if (e.target === dlg) dlg.close(); });
+}
+
+/* ---- ?tour: a deterministic walkthrough from C.tour — tourAt(ms) paints one frame; record-video.sh records it ---- */
+function tourInit(){
+  var T = C.tour, H = document.documentElement, TR = T.transition || 360;
+  H.classList.add('tourmode', 'shot'); document.body.classList.add('nofx');
+  var SEG = T.segments, START = [], STATE = [], UNDER = [], acc = 0, st = JSON.parse(JSON.stringify(C.state));
+  SEG.forEach(function(s, i){
+    START.push(acc); acc += s.d;
+    Object.keys(s.st || {}).forEach(function(k){ st[k] = s.st[k]; }); STATE.push(JSON.parse(JSON.stringify(st)));
+    var u = null; if (scr[s.id].classList.contains('sheet')) for (var j = i - 1; j >= 0; j--) if (!scr[SEG[j].id].classList.contains('sheet')) { u = SEG[j].id; break; }
+    UNDER.push(u);
+  });
+  var TOTAL = acc, capEl = $('tCap'), tap = $('tTap'), pressed = null, popped = [];
+  $('tIntro').innerHTML = '<p class="au-eyebrow"><i></i>' + document.querySelector('.au-top-hero .au-eyebrow').textContent + '</p><h1 class="au-display">' + C.app + '</h1>' +
+    '<p class="au-lede">' + (T.introLede || document.querySelector('.au-top-hero .au-lede').innerHTML) + '</p>';
+  $('tEnd').innerHTML = '<p class="au-eyebrow"><i></i>Growth Audit · ' + C.app + '</p><h2 class="au-te-h">' + (T.endTitle || 'Five ideas, built into your own onboarding.') + '</h2>' +
+    '<div class="au-te-n">' + (O.cr ? '<div><small>up to</small><b>' + O.cr + '</b><span>CR to purchase</span></div>' : '') + (O.arpu ? '<div><small>up to</small><b>' + O.arpu + '</b><span>ARPU</span></div>' : '') + '</div>' +
+    (C.liveUrl ? '<div class="au-te-q"><img src="assets/qr-app.png" alt=""><div><b>Try it on your phone</b><span>' + C.liveUrl.replace(/^https?:\/\//, '').replace(/\/$/, '') + '</span></div></div>' : '') +
+    '<p class="au-te-f">' + C.grounding + '</p>';
+  function ease(x){ return x < .5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2; }
+  function easeBack(x){ var c1 = 1.70158, c3 = c1 + 1; return 1 + c3 * Math.pow(x - 1, 3) + c1 * Math.pow(x - 1, 2); }
+  function capHTML(c){
+    c = c || {k: '', t: '', l: ''};
+    return '<div class="au-tk' + (c.n ? '' : ' au-ctx') + '"><i></i>' + (c.n ? 'Idea ' + c.n + ' of ' + IDEAS : (c.k || 'Context')) + '</div><h2 class="au-tt">' + c.t + '</h2><p class="au-tl">' + (c.l || '') + '</p>' +
+      (c.o ? '<div class="au-to"><small>Potential outcome · based on Adapty data</small><b><mark>' + c.o + '</mark></b><span>' + (c.ol || '') + '</span></div>' : '');
+  }
+  function place(id, tf, z){ scr[id].style.transform = tf; scr[id].style.zIndex = z; }
+  window.TOUR_MS = TOTAL;
+  window.tourAt = function(ms){
+    ms = Math.max(0, Math.min(TOTAL - 1, ms));
+    var i = 0; while (i < SEG.length - 1 && ms >= START[i + 1]) i++;
+    var s = SEG[i], local = ms - START[i], prev = i > 0 ? SEG[i - 1] : null;
+    Object.keys(STATE[i]).forEach(function(k){ S[k] = STATE[i][k]; }); sync();
+    var moving = prev && prev.id !== s.id && local < TR, p = moving ? ease(local / TR) : 1;
+    Object.keys(scr).forEach(function(k){ scr[k].classList.remove('is-active', 'is-past', 'under'); place(k, 'translateX(100%)', 0); });
+    var B = scr[s.id];
+    if (moving) {
+      if (B.classList.contains('sheet')) { place(prev.id, 'none', 1); B.style.transform = 'translateY(' + (1 - p) * 100 + '%)'; }
+      else {
+        var slide = 'translateX(' + (-28 * p) + '%)'; place(prev.id, slide, 1); B.style.transform = 'translateX(' + (1 - p) * 100 + '%)';
+        if (UNDER[i - 1]) place(UNDER[i - 1], slide, 0);
+      }
+    } else B.style.transform = 'none';
+    B.style.zIndex = 2;
+    if (UNDER[i] && !moving) place(UNDER[i], 'none', 1);
+    /* optional reveal: s.pop scales an element in, s.reveal fades one in a beat later */
+    popped.forEach(function(e){ e.style.transform = ''; e.style.opacity = ''; }); popped = [];
+    var q = Math.max(0, Math.min(1, (local - 250) / 550));
+    if (s.pop) { var pe = B.querySelector(s.pop); if (pe) { pe.style.transform = 'scale(' + (.55 + .45 * easeBack(q)) + ')'; pe.style.opacity = Math.min(1, q * 1.6); popped.push(pe); } }
+    if (s.reveal) { var re = B.querySelector(s.reveal); if (re) { re.style.opacity = Math.max(0, Math.min(1, (local - 520) / 300)); popped.push(re); } }
+    /* caption crossfades at screen changes; waits for the intro, gives way to the end card */
+    var key = s.id, op = 1;
+    if (moving) { if (p < .5) { key = prev.id; op = 1 - p * 2; } else op = p * 2 - 1; }
+    if (capEl.dataset.k !== key) { capEl.innerHTML = capHTML(T.captions[key]); capEl.dataset.k = key; }
+    var io = ms < 1100 ? 1 : Math.max(0, 1 - (ms - 1100) / 300), eo = s.end ? Math.min(1, local / 350) : 0;
+    capEl.style.opacity = op * Math.max(0, Math.min(1, (ms - 1400) / 300)) * (1 - eo);
+    /* the finger: fades in, taps, ripples out. Selectors are scoped to the screen */
+    tap.style.opacity = 0; if (pressed) { pressed.style.opacity = ''; pressed = null; }
+    if (s.tap) {
+      var el = B.querySelector(s.tap[0]), dt = local - s.tap[1];
+      if (el && dt > -260 && dt < 420) {
+        var r = el.getBoundingClientRect();
+        tap.style.left = (r.left + r.width / 2) + 'px'; tap.style.top = (r.top + r.height / 2) + 'px';
+        if (dt < 0) { tap.style.opacity = (dt + 260) / 260 * .9; tap.style.transform = 'scale(1)'; }
+        else { tap.style.opacity = .9 * (1 - dt / 420); tap.style.transform = 'scale(' + (1 + dt / 420 * .9) + ')'; }
+        if (dt >= 0 && dt < 160) { el.style.opacity = .72; pressed = el; }
+      }
+    }
+    $('tIntro').style.opacity = T.intro === false ? 0 : io;
+    $('tEnd').style.opacity = eo;
+    $('tProg').style.width = (ms / TOTAL * 100) + '%';
+    cur = s.id;
+    return i;
+  };
+  var tm = /[?&]t=(\d+)/.exec(Q); tourAt(tm ? +tm[1] : 0);
+}
+
+/* boot: #<screen-id> deep-links a screen (shoot.sh / hero-stills.sh use it); ?lang=xx picks the language */
+(function(){
+  var lm = /[?&]lang=(\w+)/.exec(Q); if (lm) setLang(lm[1]); else setLang(S.lang);
+  var h = location.hash.slice(1);
+  jump(scr[h] ? h : ORDER[0]);
+  if (scr[h] && !SHOT && !document.documentElement.classList.contains('appmode')) setTimeout(function(){ $('prototype').scrollIntoView(); }, 0);
+  if (/[?&]tour\b/.test(Q) && C.tour) tourInit();
+})();
+</script>
+</body>
+</html>

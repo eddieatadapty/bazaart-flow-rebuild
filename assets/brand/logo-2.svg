@@ -1,0 +1,16 @@
+<svg
+xmlns="http://www.w3.org/2000/svg" width="32" height="32" fill="none" viewBox="0 0 1025 1025" aria-labelledby="site-logo-ico" role="img" style="display: block;"><title
+id="site-logo-ico">Bazaart</title><path
+fill="url(#logo-icon-a)" d="M372.184 1024.67c-135.354 0-203.031 0-253.971-28.004a226.397 226.397 0 0 1-89.33-89.333C.88 856.391.88 788.716.88 653.364v-281.39c0-135.354 0-203.031 28.005-253.971a226.404 226.404 0 0 1 89.329-89.33C169.153.67 236.83.67 372.184.67h281.39c135.351 0 203.027 0 253.969 28.005a226.397 226.397 0 0 1 89.333 89.329c28.004 50.94 28.004 118.617 28.004 253.971v281.39c0 135.352 0 203.027-28.004 253.969a226.39 226.39 0 0 1-89.333 89.333c-50.942 28.004-118.618 28.004-253.969 28.004h-281.39Z"/><path
+stroke="#fff" stroke-width="75.018" d="M380.804 853.282h194.11c192.234 0 271.585-194.814 179.235-345.763-65.331-106.785-198.015-111.906-216.415-11.967a98.852 98.852 0 0 0 0 30.482c18.4 99.938 151.084 94.818 216.415-11.967 92.35-150.949 12.999-345.764-179.235-345.764h-194.11c-73.518 0-129.407 52.513-129.407 131.283V722c0 78.77 55.889 131.282 129.407 131.282Z" style="stroke:#fff;stroke-opacity:1"/><path
+stroke="url(#logo-icon-b)" stroke-width="75.018" d="M574.914 168.303c192.235 0 271.586 194.815 179.235 345.764-65.331 106.785-198.015 111.905-216.415 11.967"/><path
+stroke="#fff" stroke-width="75.018" d="M574.914 853.283c192.235 0 271.586-194.815 179.235-345.763-65.331-106.785-198.015-111.906-216.415-11.967" style="stroke:#fff;stroke-opacity:1"/><defs><linearGradient
+id="logo-icon-a" x1="338.122" x2="512.879" y1="284.814" y2="948.778" gradientUnits="userSpaceOnUse"><stop
+stop-color="#FF0560" style="stop-color:#ff0560;stop-color:color(display-p3 1 .0196 .3765);stop-opacity:1"/><stop
+offset="1" stop-color="#C700CC" style="stop-color:#c700cc;stop-color:color(display-p3 .7804 0 .8);stop-opacity:1"/></linearGradient><linearGradient
+id="logo-icon-b" x1="746.949" x2="619.503" y1="365.699" y2="557.742" gradientUnits="userSpaceOnUse"><stop
+offset=".01" stop-color="#fff" style="stop-color:white;stop-opacity:1"/><stop
+offset=".372" stop-color="#EACAEA" style="stop-color:#eacaea;stop-color:color(display-p3 .9164 .7904 .9195);stop-opacity:1"/><stop
+offset=".481" stop-color="#D494D6" style="stop-color:#d494d6;stop-color:color(display-p3 .8322 .5796 .8386);stop-opacity:1"/><stop
+offset=".619" stop-color="#E9C8EA" style="stop-color:#e9c8ea;stop-color:color(display-p3 .9143 .7852 .9175);stop-opacity:1"/><stop
+offset="1" stop-color="#fff" style="stop-color:white;stop-opacity:1"/></linearGradient></defs></svg>
